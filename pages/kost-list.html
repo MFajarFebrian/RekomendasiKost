@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Kost - SiKost</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/components.css">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="/RekomendasiKost/" class="navbar-brand">SiKost</a>
+            <ul class="nav-menu">
+                <li><a href="/RekomendasiKost/" class="nav-link">Home</a></li>
+                <li><a href="/RekomendasiKost/pages/kost-list.html" class="nav-link active">Daftar Kost</a></li>
+                <li><a href="/RekomendasiKost/pages/recommendations.html" class="nav-link">Rekomendasi</a></li>
+                <li id="auth-nav"><a href="/RekomendasiKost/pages/login.html" class="btn btn-primary btn-sm">Login</a>
+                </li>
+            </ul>
+            <button class="nav-toggle"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <main style="padding-top: 100px;">
+        <section class="section-sm">
+            <div class="container">
+                <h1 class="mb-2">Daftar Kost</h1>
+                <p class="text-secondary mb-4">Silakan pilih area kampus untuk melihat daftar kost yang tersedia.</p>
+
+                <!-- Filters -->
+                <div class="card mb-5" style="padding: var(--space-4);">
+                    <form id="filter-form" class="flex" style="flex-wrap: wrap; gap: var(--space-4);">
+                        <div class="form-group" style="flex: 1; min-width: 200px; margin: 0;">
+                            <input type="text" class="form-control" id="search" placeholder="🔍 Cari nama kost...">
+                        </div>
+                        <div class="form-group" style="width: 180px; margin: 0;">
+                            <select class="form-control form-select" id="kampus_id" required>
+                                <option value="" disabled selected>🎓 Pilih Kampus</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="width: 150px; margin: 0;">
+                            <select class="form-control form-select" id="max_harga">
+                                <option value="">Max Harga</option>
+                                <option value="1000000">≤ Rp 1 Juta</option>
+                                <option value="1500000">≤ Rp 1.5 Juta</option>
+                                <option value="2000000">≤ Rp 2 Juta</option>
+                                <option value="2500000">≤ Rp 2.5 Juta</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="width: 130px; margin: 0;">
+                            <select class="form-control form-select" id="sort_by">
+                                <option value="id">Urutkan</option>
+                                <option value="harga">Harga</option>
+                                <option value="jarak_kampus">Jarak</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Filter</button>
+                    </form>
+                </div>
+
+                <!-- Kost Grid -->
+                <div class="grid grid-3" id="kost-grid">
+                    <div class="text-center p-6">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="flex-center mt-6" id="pagination"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-brand">SiKost</div>
+                    <p class="footer-description">Sistem Rekomendasi Kost dengan metode AHP-TOPSIS untuk hasil yang
+                        objektif dan terukur.</p>
+                </div>
+                <div>
+                    <h5 class="footer-title">Menu</h5>
+                    <div class="footer-links">
+                        <a href="/RekomendasiKost/">Home</a>
+                        <a href="/RekomendasiKost/pages/kost-list.html">Daftar Kost</a>
+                        <a href="/RekomendasiKost/pages/recommendations.html">Rekomendasi</a>
+                    </div>
+                </div>
+                <div>
+                    <h5 class="footer-title">Fitur</h5>
+                    <div class="footer-links">
+                        <a href="#">Pencarian</a>
+                        <a href="#">Filter</a>
+                        <a href="#">Perbandingan</a>
+                    </div>
+                </div>
+                <div>
+                    <h5 class="footer-title">Kontak</h5>
+                    <div class="footer-links">
+                        <a href="#">Email: info@sikost.com</a>
+                        <a href="#">Telp: (021) 123-4567</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 SiKost. All rights reserved. Built with AHP-TOPSIS Method.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/utils.js"></script>
+    <script src="../assets/js/app.js"></script>
+    <script>
+        let currentPage = 1;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await updateNavAuth();
+            await loadCampuses();
+            await loadKost();
+
+            document.getElementById('filter-form').addEventListener('submit', e => {
+                e.preventDefault();
+                currentPage = 1;
+                loadKost();
+            });
+
+            document.getElementById('search').addEventListener('input', debounce(() => {
+                currentPage = 1;
+                loadKost();
+            }, 500));
+
+            document.getElementById('kampus_id').addEventListener('change', () => {
+                currentPage = 1;
+                loadKost();
+            });
+        });
+
+        async function loadCampuses() {
+            try {
+                const campuses = await API.get('/kampus');
+                const select = document.getElementById('kampus_id');
+                campuses.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.id;
+                    opt.textContent = c.nama;
+                    select.appendChild(opt);
+                });
+            } catch (e) { console.error(e); }
+        }
+
+        async function loadKost() {
+            const container = document.getElementById('kost-grid');
+            const params = {
+                page: currentPage,
+                limit: 9,
+                search: document.getElementById('search').value,
+                kampus_id: document.getElementById('kampus_id').value,
+                max_harga: document.getElementById('max_harga').value,
+                sort_by: document.getElementById('sort_by').value
+            };
+
+            Object.keys(params).forEach(k => !params[k] && delete params[k]);
+
+            try {
+                if (!params.kampus_id) {
+                    container.innerHTML = '<div class="text-center p-6 text-secondary">Silakan pilih area kampus terlebih dahulu.</div>';
+                    document.getElementById('pagination').innerHTML = '';
+                    return;
+                }
+
+                const data = await KostAPI.getAll(params);
+
+                if (data.items.length === 0) {
+                    container.innerHTML = '<div class="text-center p-6 text-secondary">Tidak ada kost ditemukan untuk kriteria ini.</div>';
+                    document.getElementById('pagination').innerHTML = '';
+                    return;
+                }
+
+                container.innerHTML = data.items.map(kost => `
+                    <div class="kost-card">
+                        <div class="kost-card-image">
+                            <img src="${kost.foto_utama || getPlaceholderImage(kost.nama)}" alt="${escapeHtml(kost.nama)}">
+                        </div>
+                        <div class="kost-card-content">
+                            <h4 class="kost-name">${escapeHtml(kost.nama)}</h4>
+                            <p class="kost-price">${formatCurrency(kost.harga)} <span>/bulan</span></p>
+                            <div class="kost-meta">
+                                <span>📍 ${formatDistance(kost.jarak_kampus)}</span>
+                                <span>⭐ ${((kost.kebersihan + kost.keamanan + kost.fasilitas) / 3).toFixed(1)}</span>
+                            </div>
+                            <div class="kost-features">
+                                <span class="badge">Kebersihan: ${kost.kebersihan}/5</span>
+                                <span class="badge">Keamanan: ${kost.keamanan}/5</span>
+                            </div>
+                            <a href="kost-detail.html?id=${kost.id}" class="btn btn-outline" style="width: 100%;">Detail</a>
+                        </div>
+                    </div>
+                `).join('');
+
+                renderPagination(data.pagination);
+            } catch (e) {
+                container.innerHTML = '<div class="text-center text-danger">Gagal memuat data.</div>';
+            }
+        }
+
+        function renderPagination(pagination) {
+            const container = document.getElementById('pagination');
+            if (pagination.total_pages <= 1) { container.innerHTML = ''; return; }
+
+            let html = '';
+            if (pagination.has_prev) html += `<button class="btn btn-sm btn-secondary" onclick="goToPage(${pagination.current_page - 1})">←</button>`;
+            html += `<span class="p-3">Page ${pagination.current_page} of ${pagination.total_pages}</span>`;
+            if (pagination.has_next) html += `<button class="btn btn-sm btn-secondary" onclick="goToPage(${pagination.current_page + 1})">→</button>`;
+            container.innerHTML = html;
+        }
+
+        function goToPage(page) { currentPage = page; loadKost(); }
+    </script>
+</body>
+
+</html>

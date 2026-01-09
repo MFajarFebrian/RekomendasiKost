@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Konfigurasi AHP - Admin - SiKost</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/css/main.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    <link rel="stylesheet" href="../../assets/css/responsive.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="/RekomendasiKost/" class="navbar-brand">SiKost <span class="badge badge-primary">Admin</span></a>
+            <ul class="nav-menu">
+                <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+                <li><a href="manage-kost.html" class="nav-link">Manage Kost</a></li>
+                <li><a href="configure-ahp.html" class="nav-link active">Konfigurasi AHP</a></li>
+                <li><a href="#" class="nav-link" onclick="logout(); return false;">Logout</a></li>
+            </ul>
+            <button class="nav-toggle"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <main style="padding-top: 100px;">
+        <section class="section-sm">
+            <div class="container">
+                <h1 class="mb-4">Konfigurasi Bobot Kriteria (AHP)</h1>
+                <p class="text-secondary mb-6">Atur perbandingan berpasangan antar kriteria. Skala 1-9 (Saaty Scale).
+                </p>
+
+                <!-- AHP Matrix -->
+                <div class="card mb-5" style="padding: var(--space-5); overflow-x: auto;">
+                    <h4 class="mb-4">Matriks Perbandingan Berpasangan</h4>
+                    <table class="ahp-matrix" id="ahp-matrix">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Jarak Kampus</th>
+                                <th>Jarak Market</th>
+                                <th>Harga</th>
+                                <th>Kebersihan</th>
+                                <th>Keamanan</th>
+                                <th>Fasilitas</th>
+                            </tr>
+                        </thead>
+                        <tbody id="matrix-body"></tbody>
+                    </table>
+                    <div class="mt-4">
+                        <button class="btn btn-primary" onclick="calculateAHP()">Hitung & Simpan Bobot</button>
+                        <button class="btn btn-secondary" onclick="resetMatrix()">Reset ke Default</button>
+                    </div>
+                </div>
+
+                <!-- Results -->
+                <div class="card" style="padding: var(--space-5);">
+                    <div class="ahp-results">
+                        <h4 class="mb-4">Hasil Perhitungan</h4>
+                        <div id="ahp-results">
+                            <p class="text-secondary">Klik "Hitung & Simpan Bobot" untuk melihat hasil.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/utils.js"></script>
+    <script src="../../assets/js/app.js"></script>
+    <script>
+        const criteria = ['Jarak Kampus', 'Jarak Market', 'Harga', 'Kebersihan', 'Keamanan', 'Fasilitas'];
+        let matrix = [];
+
+        const defaultMatrix = [
+            [1, 2, 0.25, 1, 0.6667, 0.5],
+            [0.5, 1, 0.125, 0.5, 0.3333, 0.25],
+            [4, 8, 1, 4, 2.6667, 2],
+            [1, 2, 0.25, 1, 0.6667, 0.5],
+            [1.5, 3, 0.375, 1.5, 1, 0.75],
+            [2, 4, 0.5, 2, 1.3333, 1]
+        ];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const user = await checkAuth();
+            if (!user || user.role !== 'admin') {
+                window.location.href = '/RekomendasiKost/pages/login.html';
+                return;
+            }
+            matrix = JSON.parse(JSON.stringify(defaultMatrix));
+            renderMatrix();
+        });
+
+        function renderMatrix() {
+            const tbody = document.getElementById('matrix-body');
+            let html = '';
+
+            criteria.forEach((row, i) => {
+                html += `<tr><th>${row}</th>`;
+                criteria.forEach((col, j) => {
+                    if (i === j) {
+                        html += '<td>1</td>';
+                    } else if (j > i) {
+                        html += `<td>
+                            <select onchange="updateValue(${i}, ${j}, this.value)">
+                                ${generateOptions(matrix[i][j])}
+                            </select>
+                        </td>`;
+                    } else {
+                        html += `<td class="text-secondary">${formatNumber(matrix[i][j], 4)}</td>`;
+                    }
+                });
+                html += '</tr>';
+            });
+
+            tbody.innerHTML = html;
+        }
+
+        function generateOptions(selected) {
+            const scales = [
+                { v: 9, l: '9 - Extreme' }, { v: 8, l: '8' }, { v: 7, l: '7 - Very Strong' },
+                { v: 6, l: '6' }, { v: 5, l: '5 - Strong' }, { v: 4, l: '4' },
+                { v: 3, l: '3 - Moderate' }, { v: 2, l: '2' }, { v: 1, l: '1 - Equal' },
+                { v: 0.5, l: '1/2' }, { v: 0.3333, l: '1/3' }, { v: 0.25, l: '1/4' },
+                { v: 0.2, l: '1/5' }, { v: 0.1667, l: '1/6' }, { v: 0.1429, l: '1/7' },
+                { v: 0.125, l: '1/8' }, { v: 0.1111, l: '1/9' }
+            ];
+
+            return scales.map(s => {
+                const sel = Math.abs(s.v - selected) < 0.01 ? 'selected' : '';
+                return `<option value="${s.v}" ${sel}>${s.l}</option>`;
+            }).join('');
+        }
+
+        function updateValue(i, j, value) {
+            const v = parseFloat(value);
+            matrix[i][j] = v;
+            matrix[j][i] = 1 / v;
+            renderMatrix();
+        }
+
+        function resetMatrix() {
+            matrix = JSON.parse(JSON.stringify(defaultMatrix));
+            renderMatrix();
+            showToast('Matrix reset ke default', 'info');
+        }
+
+        async function calculateAHP() {
+            showLoading('Menghitung bobot...');
+
+            const matrixObj = {};
+            criteria.forEach((c, i) => {
+                matrixObj[c] = matrix[i];
+            });
+
+            try {
+                const result = await SPKAPI.configureAHP(matrixObj);
+                hideLoading();
+
+                let html = `
+                    <div class="mb-4">
+                        <p>Consistency Ratio: <strong>${formatNumber(result.consistency_ratio, 4)}</strong></p>
+                        <p class="cr-status ${result.is_consistent ? 'success' : 'error'}">
+                            ${result.is_consistent ? '✓ Matriks Konsisten (CR < 0.1)' : '✗ Matriks Tidak Konsisten (CR >= 0.1)'}
+                        </p>
+                    </div>
+                    <h5 class="mb-3">Bobot Kriteria:</h5>
+                    <ul class="weights-list">
+                `;
+
+                Object.entries(result.weights).forEach(([key, val]) => {
+                    const name = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                    html += `<li><span>${name}</span><strong>${formatPercent(val)}</strong></li>`;
+                });
+
+                html += '</ul>';
+                document.getElementById('ahp-results').innerHTML = html;
+
+                showToast(result.is_consistent ? 'Bobot berhasil disimpan!' : 'Matriks tidak konsisten!',
+                    result.is_consistent ? 'success' : 'warning');
+            } catch (e) {
+                hideLoading();
+                document.getElementById('ahp-results').innerHTML = `<p class="text-danger">${e.message}</p>`;
+                showToast(e.message, 'error');
+            }
+        }
+    </script>
+</body>
+
+</html>

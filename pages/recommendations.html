@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cari Kost Terbaik - SiKost</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/components.css">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
+    <style>
+        .priority-slider {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            margin-bottom: var(--space-4);
+        }
+
+        .priority-slider label {
+            min-width: 140px;
+            font-weight: var(--fw-medium);
+        }
+
+        .priority-slider input[type="range"] {
+            flex: 1;
+            height: 8px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: linear-gradient(to right, var(--primary-purple), var(--primary-purple-light));
+            border-radius: var(--radius-full);
+        }
+
+        .priority-slider input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border: 3px solid var(--primary-purple);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+        }
+
+        .priority-value {
+            min-width: 50px;
+            text-align: right;
+            font-weight: var(--fw-bold);
+            color: var(--primary-purple);
+        }
+
+        .result-card {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+            padding: var(--space-5);
+            margin-bottom: var(--space-4);
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: var(--space-4);
+            align-items: center;
+            transition: all var(--transition-base);
+        }
+
+        .result-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .result-rank {
+            width: 48px;
+            height: 48px;
+            background: var(--primary-gradient);
+            color: white;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--fs-xl);
+            font-weight: var(--fw-bold);
+        }
+
+        .result-rank.gold {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+        }
+
+        .result-rank.silver {
+            background: linear-gradient(135deg, #C0C0C0, #808080);
+        }
+
+        .result-rank.bronze {
+            background: linear-gradient(135deg, #CD7F32, #8B4513);
+        }
+
+        .result-info h4 {
+            margin-bottom: var(--space-1);
+        }
+
+        .result-meta {
+            display: flex;
+            gap: var(--space-4);
+            color: var(--secondary-gray);
+            font-size: var(--fs-sm);
+        }
+
+        .result-score {
+            text-align: center;
+        }
+
+        .result-score .score {
+            font-size: var(--fs-3xl);
+            font-weight: var(--fw-bold);
+            color: var(--primary-purple);
+        }
+
+        .result-score .label {
+            font-size: var(--fs-xs);
+            color: var(--secondary-gray);
+        }
+
+        .match-badge {
+            display: inline-block;
+            padding: var(--space-1) var(--space-3);
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent-success);
+            border-radius: var(--radius-full);
+            font-size: var(--fs-xs);
+            font-weight: var(--fw-medium);
+            margin-top: var(--space-2);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="/RekomendasiKost/" class="navbar-brand">SiKost</a>
+            <ul class="nav-menu">
+                <li><a href="/RekomendasiKost/" class="nav-link">Home</a></li>
+                <li><a href="/RekomendasiKost/pages/kost-list.html" class="nav-link">Daftar Kost</a></li>
+                <li><a href="/RekomendasiKost/pages/recommendations.html" class="nav-link active">Rekomendasi</a></li>
+                </li>
+                <li id="auth-nav"><a href="/RekomendasiKost/pages/login.html" class="btn btn-primary btn-sm">Login</a>
+                </li>
+            </ul>
+            <button class="nav-toggle"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <main style="padding-top: 100px;">
+        <section class="section-sm">
+            <div class="container">
+                <h1 class="mb-2">🏠 Temukan Kost Terbaik</h1>
+                <p class="text-secondary mb-6">Atur prioritasmu dan kami akan carikan kost yang paling cocok untukmu!
+                </p>
+
+                <!-- Priority Sliders -->
+                <div class="card mb-5" style="padding: var(--space-6);">
+                    <div class="flex-between mb-5">
+                        <h4 class="m-0">📊 Atur Prioritasmu</h4>
+                        <div id="total-weight-container" class="badge badge-primary" style="font-size: var(--fs-md);">
+                            Total: <span id="total-weight">100</span>%
+                        </div>
+                    </div>
+
+                    <!-- Campus Selection -->
+                    <div class="form-group mb-5">
+                        <label class="form-label">🎓 Pilih Kampus</label>
+                        <select class="form-control form-select" id="kampus-select"
+                            style="max-width: 400px; margin-left: 0; margin-right: auto;">
+                        </select>
+                    </div>
+
+                    <div class="priority-slider">
+                        <label>📍 Jarak ke Kampus</label>
+                        <input type="range" class="weight-slider" id="w-jarak" data-id="jarak" min="0" max="100"
+                            value="16">
+                        <span class="priority-value" id="v-jarak">16%</span>
+                    </div>
+
+                    <div class="priority-slider">
+                        <label>🛒 Jarak ke Market</label>
+                        <input type="range" class="weight-slider" id="w-market" data-id="market" min="0" max="100"
+                            value="16">
+                        <span class="priority-value" id="v-market">16%</span>
+                    </div>
+
+                    <div class="priority-slider">
+                        <label>💰 Harga Terjangkau</label>
+                        <input type="range" class="weight-slider" id="w-harga" data-id="harga" min="0" max="100"
+                            value="17">
+                        <span class="priority-value" id="v-harga">17%</span>
+                    </div>
+
+                    <div class="priority-slider">
+                        <label>🧹 Kebersihan</label>
+                        <input type="range" class="weight-slider" id="w-kebersihan" data-id="kebersihan" min="0"
+                            max="100" value="17">
+                        <span class="priority-value" id="v-kebersihan">17%</span>
+                    </div>
+
+                    <div class="priority-slider">
+                        <label>🔒 Keamanan</label>
+                        <input type="range" class="weight-slider" id="w-keamanan" data-id="keamanan" min="0" max="100"
+                            value="17">
+                        <span class="priority-value" id="v-keamanan">17%</span>
+                    </div>
+
+                    <div class="priority-slider">
+                        <label>🏠 Fasilitas</label>
+                        <input type="range" class="weight-slider" id="w-fasilitas" data-id="fasilitas" min="0" max="100"
+                            value="17">
+                        <span class="priority-value" id="v-fasilitas">17%</span>
+                    </div>
+
+                    <button class="btn btn-primary btn-lg mt-4" onclick="findRecommendations()" style="width: 100%;">
+                        🔍 Cari Rekomendasi Terbaik
+                    </button>
+                </div>
+
+                <!-- Results -->
+                <div id="results-section" style="display: none;">
+                    <h3 class="mb-4">🏆 Rekomendasi Untukmu</h3>
+                    <div id="results-container"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-brand">SiKost</div>
+                    <p class="footer-description">Sistem Rekomendasi Kost dengan metode AHP-TOPSIS untuk hasil yang
+                        objektif dan terukur.</p>
+                </div>
+                <div>
+                    <h5 class="footer-title">Menu</h5>
+                    <div class="footer-links">
+                        <a href="/RekomendasiKost/">Home</a>
+                        <a href="/RekomendasiKost/pages/kost-list.html">Daftar Kost</a>
+                        <a href="/RekomendasiKost/pages/recommendations.html">Rekomendasi</a>
+                    </div>
+                </div>
+                <div>
+                    <h5 class="footer-title">Fitur</h5>
+                    <div class="footer-links">
+                        <a href="#">Pencarian</a>
+                        <a href="#">Filter</a>
+                        <a href="#">Perbandingan</a>
+                    </div>
+                </div>
+                <div>
+                    <h5 class="footer-title">Kontak</h5>
+                    <div class="footer-links">
+                        <a href="#">Email: info@sikost.com</a>
+                        <a href="#">Telp: (021) 123-4567</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 SiKost. All rights reserved. Built with AHP-TOPSIS Method.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/utils.js"></script>
+    <script src="../assets/js/app.js"></script>
+    <script>
+        const sliders = Array.from(document.querySelectorAll('.weight-slider'));
+        const totalWeightSpan = document.getElementById('total-weight');
+
+        sliders.forEach(slider => {
+            slider.addEventListener('input', (e) => {
+                balanceSliders(e.target);
+                updateValueLabels();
+            });
+        });
+
+        function balanceSliders(changedSlider) {
+            const changedId = changedSlider.dataset.id;
+            const newValue = parseInt(changedSlider.value);
+            const otherSliders = sliders.filter(s => s.dataset.id !== changedId);
+
+            const totalOther = otherSliders.reduce((sum, s) => sum + parseInt(s.value), 0);
+            const targetTotalOther = 100 - newValue;
+
+            if (totalOther === 0) {
+                // If all others were 0, distribute equally
+                const share = Math.floor(targetTotalOther / otherSliders.length);
+                let currentAdded = 0;
+                otherSliders.forEach((s, index) => {
+                    if (index === otherSliders.length - 1) {
+                        s.value = targetTotalOther - currentAdded;
+                    } else {
+                        s.value = share;
+                        currentAdded += share;
+                    }
+                });
+            } else {
+                // Adjust other sliders proportionally
+                const factor = targetTotalOther / totalOther;
+                let currentSum = newValue;
+
+                otherSliders.forEach((s, index) => {
+                    let sValue = Math.round(parseInt(s.value) * factor);
+
+                    // On the last slider, adjust to match exactly 100
+                    if (index === otherSliders.length - 1) {
+                        sValue = 100 - currentSum;
+                    }
+
+                    s.value = Math.max(0, sValue);
+                    currentSum += parseInt(s.value);
+                });
+
+                // Final verification adjust
+                if (currentSum !== 100) {
+                    const diff = 100 - currentSum;
+                    const last = otherSliders[otherSliders.length - 1];
+                    last.value = parseInt(last.value) + diff;
+                }
+            }
+        }
+
+        function updateValueLabels() {
+            let total = 0;
+            sliders.forEach(s => {
+                const val = parseInt(s.value);
+                const label = document.getElementById(`v-${s.dataset.id}`);
+                if (label) {
+                    label.textContent = val + '%';
+                    total += val;
+                }
+            });
+            totalWeightSpan.textContent = total;
+
+            const container = document.getElementById('total-weight-container');
+            if (total !== 100) {
+                container.classList.remove('badge-primary');
+                container.classList.add('badge-danger');
+            } else {
+                container.classList.remove('badge-danger');
+                container.classList.add('badge-primary');
+            }
+        }
+
+        // Initialize labels
+        updateValueLabels();
+
+        // Load campuses
+        document.addEventListener('DOMContentLoaded', async () => {
+            await updateNavAuth();
+            await loadCampuses();
+        });
+
+        async function loadCampuses() {
+            try {
+                const campuses = await API.get('/kampus');
+                const select = document.getElementById('kampus-select');
+                campuses.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.id;
+                    opt.textContent = `${c.nama} (${c.kota})`;
+                    select.appendChild(opt);
+                });
+            } catch (e) {
+                console.error('Failed to load campuses:', e);
+            }
+        }
+
+        async function findRecommendations() {
+            showLoading('Mencari kost terbaik...');
+
+            const weights = {
+                jarak_kampus: parseInt(document.getElementById('w-jarak').value),
+                jarak_market: parseInt(document.getElementById('w-market').value),
+                harga: parseInt(document.getElementById('w-harga').value),
+                kebersihan: parseInt(document.getElementById('w-kebersihan').value),
+                keamanan: parseInt(document.getElementById('w-keamanan').value),
+                fasilitas: parseInt(document.getElementById('w-fasilitas').value)
+            };
+
+            const kampusId = document.getElementById('kampus-select').value;
+
+            try {
+                const data = await API.post('/spk/topsis/calculate', {
+                    weights: weights,
+                    kampus_id: kampusId || null,
+                    limit: 10
+                });
+
+                hideLoading();
+                renderResults(data.recommendations);
+            } catch (e) {
+                hideLoading();
+                showToast(e.message, 'error');
+            }
+        }
+
+        function renderResults(results) {
+            const container = document.getElementById('results-container');
+            const section = document.getElementById('results-section');
+
+            if (!results.length) {
+                container.innerHTML = '<p class="text-secondary text-center p-6">Tidak ada kost yang ditemukan di lokasi ini.</p>';
+                section.style.display = 'block';
+                return;
+            }
+
+            container.innerHTML = results.map((r, i) => {
+                const rankClass = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : '';
+                const matchPercent = Math.round(r.score * 100);
+                const badge = i === 0 ? '🏆 Paling Cocok' : i === 1 ? '⭐ Sangat Cocok' : i === 2 ? '👍 Cocok' : '';
+
+                return `
+                <div class="result-card">
+                    <div class="result-rank ${rankClass}">${r.rank}</div>
+                    <div class="result-info">
+                        <h4>${escapeHtml(r.nama)}</h4>
+                        <div class="result-meta">
+                            <span>💰 ${formatCurrency(r.details.harga)}/bln</span>
+                            <span>📍 ${formatDistance(r.details.jarak_kampus)}</span>
+                            <span>⭐ ${((r.details.kebersihan + r.details.keamanan + r.details.fasilitas) / 3).toFixed(1)}/5</span>
+                        </div>
+                        ${badge ? `<span class="match-badge">${badge}</span>` : ''}
+                    </div>
+                    <div class="result-score">
+                        <div class="score">${matchPercent}%</div>
+                        <div class="label">Kecocokan</div>
+                    </div>
+                </div>`;
+            }).join('');
+
+            section.style.display = 'block';
+            section.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+
+</html>

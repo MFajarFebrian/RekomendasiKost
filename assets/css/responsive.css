@@ -1,0 +1,280 @@
+/* =========================================
+   Responsive - Sistem Rekomendasi Kost
+   ========================================= */
+
+/* ==================== Large Devices (1024px and down) ==================== */
+@media (max-width: 1024px) {
+    :root {
+        --fs-5xl: 2.5rem;
+        --fs-4xl: 2rem;
+        --fs-3xl: 1.5rem;
+    }
+
+    .hero .container {
+        gap: var(--space-6);
+    }
+
+    .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .grid-4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ==================== Tablets (768px and down) ==================== */
+@media (max-width: 768px) {
+    :root {
+        --fs-5xl: 2rem;
+        --fs-4xl: 1.75rem;
+        --fs-3xl: 1.25rem;
+    }
+
+    /* Navbar Mobile */
+    .nav-toggle {
+        display: block;
+        z-index: 1001;
+    }
+
+    .nav-menu {
+        position: fixed;
+        left: -100%;
+        top: 0;
+        width: 80%;
+        max-width: 300px;
+        height: 100vh;
+        background: var(--white);
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 100px var(--space-6) var(--space-6);
+        box-shadow: var(--shadow-xl);
+        transition: left var(--transition-base);
+        gap: var(--space-4);
+    }
+
+    .nav-menu.active {
+        left: 0;
+    }
+
+    .nav-link {
+        font-size: var(--fs-lg);
+        width: 100%;
+        padding: var(--space-3) 0;
+        border-bottom: 1px solid var(--light-gray);
+    }
+
+    /* Hamburger animation */
+    .nav-toggle.active span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    .nav-toggle.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .nav-toggle.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -5px);
+    }
+
+    /* Hero */
+    .hero .container {
+        grid-template-columns: 1fr;
+        text-align: center;
+        padding: var(--space-8) var(--space-5);
+    }
+
+    .hero-title {
+        font-size: var(--fs-4xl);
+    }
+
+    .hero-description {
+        margin: 0 auto var(--space-6);
+    }
+
+    .hero-image {
+        display: none;
+    }
+
+    /* Services */
+    .services-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Grids */
+    .grid-2,
+    .grid-3,
+    .grid-4 {
+        grid-template-columns: 1fr;
+    }
+
+    /* Tables */
+    .table-container {
+        margin: 0 calc(-1 * var(--space-4));
+    }
+
+    .table th,
+    .table td {
+        padding: var(--space-3);
+        font-size: var(--fs-sm);
+    }
+
+    /* AHP Matrix scroll */
+    .ahp-matrix-container {
+        overflow-x: auto;
+        margin: 0 calc(-1 * var(--space-4));
+        padding: 0 var(--space-4);
+    }
+
+    .ahp-matrix {
+        min-width: 600px;
+    }
+
+    /* Footer */
+    .footer-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .footer-links {
+        align-items: center;
+    }
+
+    /* Modal */
+    .modal {
+        width: 95%;
+        margin: var(--space-4);
+    }
+
+    /* Cards */
+    .kost-card-content {
+        padding: var(--space-4);
+    }
+
+    .kost-meta {
+        flex-direction: column;
+        gap: var(--space-2);
+    }
+}
+
+/* ==================== Small Devices (480px and down) ==================== */
+@media (max-width: 480px) {
+    :root {
+        --fs-5xl: 1.75rem;
+        --fs-4xl: 1.5rem;
+        --fs-3xl: 1.25rem;
+        --fs-2xl: 1.125rem;
+    }
+
+    .container {
+        padding: 0 var(--space-4);
+    }
+
+    .section {
+        padding: var(--space-8) 0;
+    }
+
+    /* Hero */
+    .hero {
+        min-height: auto;
+        padding: var(--space-10) 0 var(--space-8);
+    }
+
+    .hero-title {
+        font-size: var(--fs-3xl);
+    }
+
+    /* Buttons */
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .btn-group {
+        flex-direction: column;
+        gap: var(--space-3);
+    }
+
+    /* Form */
+    .form-control {
+        padding: var(--space-3);
+    }
+
+    /* Weights List */
+    .weights-list {
+        grid-template-columns: 1fr;
+    }
+
+    /* Score bar */
+    .score-bar {
+        height: 20px;
+    }
+
+    .score-value {
+        font-size: var(--fs-xs);
+    }
+
+    /* Toast */
+    .toast {
+        left: var(--space-4);
+        right: var(--space-4);
+        bottom: var(--space-4);
+    }
+}
+
+/* ==================== Print Styles ==================== */
+@media print {
+
+    .navbar,
+    .footer,
+    .btn,
+    .nav-toggle {
+        display: none !important;
+    }
+
+    body {
+        color: #000;
+        background: #fff;
+    }
+
+    .hero {
+        background: #fff;
+        color: #000;
+        min-height: auto;
+        padding: var(--space-4) 0;
+    }
+
+    .hero-title {
+        color: #000;
+    }
+
+    .card,
+    .kost-card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+
+    .table {
+        border: 1px solid #ddd;
+    }
+}
+
+/* ==================== Reduced Motion ==================== */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    html {
+        scroll-behavior: auto;
+    }
+}
