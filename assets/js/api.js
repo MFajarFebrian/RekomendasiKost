@@ -3,8 +3,8 @@
  * Fetch wrapper and API endpoints
  */
 
-// Fallback to local path if not defined (Vercel deployments usually use /api)
-const API_BASE_URL = window.CONFIG_API_BASE_URL || '/RekomendasiKost/api';
+// Auto-detect environment: /api for Vercel, /RekomendasiKost/api for localhost
+const API_BASE_URL = window.CONFIG_API_BASE_URL || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? '/RekomendasiKost/api' : '/api');
 
 /**
  * Base API class for making HTTP requests
