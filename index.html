@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Sistem Rekomendasi Kost dengan AHP-TOPSIS - Temukan kost terbaik sesuai preferensi Anda">
+    <title>SiKost - Sistem Rekomendasi Kost</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar transparent" data-transparent="true">
+        <div class="container">
+            <a href="/RekomendasiKost/" class="navbar-brand">SiKost</a>
+            <ul class="nav-menu">
+                <li><a href="/RekomendasiKost/" class="nav-link active">Home</a></li>
+                <li><a href="/RekomendasiKost/pages/kost-list.html" class="nav-link">Daftar Kost</a></li>
+                <li><a href="/RekomendasiKost/pages/recommendations.html" class="nav-link">Rekomendasi</a></li>
+            </ul>
+            <button class="nav-toggle" aria-label="Toggle navigation">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+    <main>
+
+        <!-- Hero Section -->
+        <section class="hero" style="padding-bottom: var(--space-12);">
+            <div class="container">
+                <div class="hero-content">
+                    <p class="hero-subtitle">✨ Sistem Rekomendasi Cerdas</p>
+                    <h1 class="hero-title">Temukan Kost Terbaik Sesuai Kebutuhanmu</h1>
+                    <p class="hero-description">Menggunakan metode AHP-TOPSIS untuk memberikan rekomendasi kost yang
+                        objektif dan terukur berdasarkan kriteria pilihanmu.</p>
+                    <div class="flex" style="gap: var(--space-3);">
+                        <a href="/RekomendasiKost/pages/recommendations.html" class="btn btn-primary btn-lg">Cari
+                            Rekomendasi</a>
+                        <a href="/RekomendasiKost/pages/kost-list.html" class="btn btn-outline btn-lg"
+                            style="background: rgba(255,255,255,0.1); border-color: white; color: white;">Lihat Semua
+                            Kost</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Kriteria Section -->
+        <section class="section bg-light">
+            <div class="container">
+                <h2 class="text-center mb-6">Kriteria Penilaian</h2>
+                <p class="text-center text-secondary mb-6"
+                    style="max-width: 600px; margin-left: auto; margin-right: auto;">
+                    Sistem kami menggunakan 6 kriteria untuk menilai dan merangking kost berdasarkan metode AHP-TOPSIS
+                </p>
+                <div class="services-grid">
+                    <div class="service-card">
+                        <div class="service-icon">📍</div>
+                        <h4 class="service-title">Jarak Kampus</h4>
+                        <p class="service-description">Semakin dekat lokasi kost ke kampus, semakin tinggi nilainya</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">🛒</div>
+                        <h4 class="service-title">Jarak Market</h4>
+                        <p class="service-description">Akses mudah ke minimarket dan pusat perbelanjaan</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">💰</div>
+                        <h4 class="service-title">Harga</h4>
+                        <p class="service-description">Harga sewa per bulan yang sesuai dengan budget</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">🧹</div>
+                        <h4 class="service-title">Kebersihan</h4>
+                        <p class="service-description">Tingkat kebersihan kamar dan area umum</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">🔒</div>
+                        <h4 class="service-title">Keamanan</h4>
+                        <p class="service-description">Sistem keamanan seperti CCTV dan jam malam</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">🏠</div>
+                        <h4 class="service-title">Fasilitas</h4>
+                        <p class="service-description">WiFi, AC, kamar mandi dalam, dan lainnya</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Kost Section -->
+        <section class="section">
+            <div class="container">
+                <h2 class="text-center mb-6">Kost Terpopuler</h2>
+                <div class="grid grid-3" id="featured-kost">
+                    <div class="text-center p-6">
+                        <div class="spinner"></div>
+                        <p class="mt-4 text-secondary">Memuat data...</p>
+                    </div>
+                </div>
+                <div class="text-center mt-6">
+                    <a href="/RekomendasiKost/pages/kost-list.html" class="btn btn-outline">Lihat Semua Kost →</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="section bg-primary" style="color: white;">
+            <div class="container text-center">
+                <h2 style="color: white;">Siap Menemukan Kost Impianmu?</h2>
+                <p class="mt-4 mb-6" style="opacity: 0.9; max-width: 500px; margin-left: auto; margin-right: auto;">
+                    Gunakan
+                    sistem rekomendasi kami untuk mendapatkan hasil yang optimal berdasarkan preferensimu.</p>
+                <a href="/RekomendasiKost/pages/recommendations.html" class="btn"
+                    style="background: white; color: var(--primary-purple);">Mulai Sekarang</a>
+            </div>
+        </section>
+
+    </main>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-brand">SiKost</div>
+                    <p class="footer-description">Sistem Rekomendasi Kost dengan metode AHP-TOPSIS untuk hasil yang
+                        objektif dan terukur.</p>
+                </div>
+                <div>
+                    <h5 class="footer-title">Menu</h5>
+                    <div class="footer-links">
+                        <a href="/RekomendasiKost/">Home</a>
+                        <a href="/RekomendasiKost/pages/kost-list.html">Daftar Kost</a>
+                        <a href="/RekomendasiKost/pages/recommendations.html">Rekomendasi</a>
+                    </div>
+                </div>
+                <div>
+                    <h5 class="footer-title">Fitur</h5>
+                    <div class="footer-links">
+                        <a href="#">Pencarian</a>
+                        <a href="#">Filter</a>
+                        <a href="#">Perbandingan</a>
+                    </div>
+                </div>
+                <div>
+                    <h5 class="footer-title">Kontak</h5>
+                    <div class="footer-links">
+                        <a href="#">Email: info@sikost.com</a>
+                        <a href="#">Telp: (021) 123-4567</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 SiKost. All rights reserved. Built with AHP-TOPSIS Method.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadFeaturedKost();
+        });
+
+        async function loadFeaturedKost() {
+            const container = document.getElementById('featured-kost');
+            try {
+                const data = await KostAPI.getAll({ limit: 6 });
+
+                if (data.items.length === 0) {
+                    container.innerHTML = '<p class="text-center text-secondary">Belum ada data kost.</p>';
+                    return;
+                }
+
+                container.innerHTML = data.items.map(kost => `
+                    <div class="kost-card">
+                        <div class="kost-card-image">
+                            <img src="${kost.foto_utama || getPlaceholderImage(kost.nama)}" alt="${escapeHtml(kost.nama)}">
+                        </div>
+                        <div class="kost-card-content">
+                            <h4 class="kost-name">${escapeHtml(kost.nama)}</h4>
+                            <p class="kost-price">${formatCurrency(kost.harga)} <span>/bulan</span></p>
+                            <div class="kost-meta">
+                                <span>📍 ${formatDistance(kost.jarak_kampus)} dari kampus</span>
+                                <span>⭐ ${((kost.kebersihan + kost.keamanan + kost.fasilitas) / 3).toFixed(1)}</span>
+                            </div>
+                            <a href="/RekomendasiKost/pages/kost-detail.html?id=${kost.id}" class="btn btn-outline" style="width: 100%;">Lihat Detail</a>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                container.innerHTML = '<p class="text-center text-danger">Gagal memuat data.</p>';
+            }
+        }
+    </script>
+</body>
+
+</html>

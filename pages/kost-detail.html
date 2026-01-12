@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Kost - SiKost</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/components.css">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="/RekomendasiKost/" class="navbar-brand">SiKost</a>
+            <ul class="nav-menu">
+                <li><a href="/RekomendasiKost/" class="nav-link">Home</a></li>
+                <li><a href="/RekomendasiKost/pages/kost-list.html" class="nav-link">Daftar Kost</a></li>
+                <li><a href="/RekomendasiKost/pages/recommendations.html" class="nav-link">Rekomendasi</a></li>
+            </ul>
+            <button class="nav-toggle"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <main style="padding-top: 100px;">
+        <section class="section-sm">
+            <div class="container">
+                <a href="kost-list.html" class="text-secondary mb-4" style="display: inline-block;">← Kembali ke
+                    Daftar</a>
+
+                <div id="kost-detail">
+                    <div class="text-center p-6">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-brand">SiKost</div>
+                    <p class="footer-description">Sistem Rekomendasi Kost dengan metode AHP-TOPSIS untuk hasil yang
+                        objektif dan terukur.</p>
+                </div>
+                <div>
+                    <h5 class="footer-title">Menu</h5>
+                    <div class="footer-links">
+                        <a href="/RekomendasiKost/">Home</a>
+                        <a href="/RekomendasiKost/pages/kost-list.html">Daftar Kost</a>
+                        <a href="/RekomendasiKost/pages/recommendations.html">Rekomendasi</a>
+                    </div>
+                </div>
+                <div>
+                    <h5 class="footer-title">Fitur</h5>
+                    <div class="footer-links">
+                        <a href="#">Pencarian</a>
+                        <a href="#">Filter</a>
+                        <a href="#">Perbandingan</a>
+                    </div>
+                </div>
+                <div>
+                    <h5 class="footer-title">Kontak</h5>
+                    <div class="footer-links">
+                        <a href="#">Email: info@sikost.com</a>
+                        <a href="#">Telp: (021) 123-4567</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 SiKost. All rights reserved. Built with AHP-TOPSIS Method.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/utils.js"></script>
+    <script src="../assets/js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const params = getQueryParams();
+            if (params.id) await loadKostDetail(params.id);
+            else document.getElementById('kost-detail').innerHTML = '<p class="text-danger">Kost tidak ditemukan.</p>';
+        });
+
+        async function loadKostDetail(id) {
+            const container = document.getElementById('kost-detail');
+            try {
+                const kost = await KostAPI.getById(id);
+                const avgRating = ((kost.kebersihan + kost.keamanan + kost.fasilitas) / 3).toFixed(1);
+
+                container.innerHTML = `
+                <div class="grid" style="grid-template-columns: 1fr 1fr; gap: var(--space-6);">
+                    <div>
+                        <img src="${kost.foto_utama || getPlaceholderImage(kost.nama, 600)}" alt="${escapeHtml(kost.nama)}" style="width: 100%; border-radius: var(--radius-xl); box-shadow: var(--shadow-lg);">
+                    </div>
+                    <div>
+                        <h1 class="mb-3">${escapeHtml(kost.nama)}</h1>
+                        <p class="text-2xl text-primary font-bold mb-4">${formatCurrency(kost.harga)} <span class="text-secondary text-base font-regular">/bulan</span></p>
+                        
+                        <div class="flex mb-4" style="gap: var(--space-4);">
+                            <span class="badge badge-primary">⭐ ${avgRating}</span>
+                            <span class="badge">📍 ${formatDistance(kost.jarak_kampus)} dari kampus</span>
+                            <span class="badge">🛒 ${formatDistance(kost.jarak_market)} dari market</span>
+                        </div>
+                        
+                        <div class="card mb-4" style="padding: var(--space-4);">
+                            <h4 class="mb-3">Rating Kriteria</h4>
+                            <div class="grid" style="grid-template-columns: 1fr 1fr; gap: var(--space-3);">
+                                <div class="flex-between"><span>Kebersihan</span><strong>${kost.kebersihan}/5</strong></div>
+                                <div class="flex-between"><span>Keamanan</span><strong>${kost.keamanan}/5</strong></div>
+                                <div class="flex-between"><span>Fasilitas</span><strong>${kost.fasilitas}/5</strong></div>
+                            </div>
+                        </div>
+                        
+                        ${kost.deskripsi ? `<div class="mb-4"><h4 class="mb-2">Deskripsi</h4><p class="text-secondary">${escapeHtml(kost.deskripsi)}</p></div>` : ''}
+                        ${kost.alamat ? `<p class="mb-4"><strong>Alamat:</strong> ${escapeHtml(kost.alamat)}</p>` : ''}
+                        
+                        <div class="flex" style="gap: var(--space-3);">
+                            <a href="recommendations.html" class="btn btn-primary">Lihat Rekomendasi</a>
+                            <a href="kost-list.html" class="btn btn-outline">Kost Lainnya</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card mt-6" style="padding: var(--space-5);">
+                    <h4 class="mb-4">Detail Data Kriteria</h4>
+                    <table class="table">
+                        <tr><th>Kriteria</th><th>Nilai</th><th>Tipe</th></tr>
+                        <tr><td>Jarak Kampus</td><td>${kost.jarak_kampus} km</td><td><span class="badge badge-warning">Cost</span></td></tr>
+                        <tr><td>Jarak Market</td><td>${kost.jarak_market} km</td><td><span class="badge badge-warning">Cost</span></td></tr>
+                        <tr><td>Harga</td><td>${formatCurrency(kost.harga)}</td><td><span class="badge badge-warning">Cost</span></td></tr>
+                        <tr><td>Kebersihan</td><td>${kost.kebersihan}/5</td><td><span class="badge badge-success">Benefit</span></td></tr>
+                        <tr><td>Keamanan</td><td>${kost.keamanan}/5</td><td><span class="badge badge-success">Benefit</span></td></tr>
+                        <tr><td>Fasilitas</td><td>${kost.fasilitas}/5</td><td><span class="badge badge-success">Benefit</span></td></tr>
+                    </table>
+                </div>`;
+            } catch (e) {
+                container.innerHTML = `<p class="text-danger">Gagal memuat data: ${e.message}</p>`;
+            }
+        }
+    </script>
+</body>
+
+</html>

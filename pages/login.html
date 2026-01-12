@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - SiKost</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/components.css">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
+    <style>
+        .login-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-gradient);
+        }
+
+        .login-card {
+            background: var(--white);
+            padding: var(--space-8);
+            border-radius: var(--radius-2xl);
+            box-shadow: var(--shadow-2xl);
+            width: 100%;
+            max-width: 400px;
+            margin: var(--space-4);
+        }
+
+        .login-logo {
+            text-align: center;
+            margin-bottom: var(--space-6);
+        }
+
+        .login-logo h1 {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-page">
+        <div class="login-card">
+            <div class="login-logo">
+                <h1>SiKost</h1>
+                <p class="text-secondary">Masuk ke akun Anda</p>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" placeholder="email@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" placeholder="••••••••" required>
+                </div>
+                <div id="error-msg" class="form-error mb-3" style="display: none;"></div>
+                <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">Login</button>
+            </form>
+            <div class="text-center mt-4">
+                <a href="/RekomendasiKost/" class="text-secondary">← Kembali ke Home</a>
+            </div>
+            <div class="text-center mt-4"
+                style="padding: var(--space-4); background: var(--light-gray); border-radius: var(--radius-md);">
+                <p class="text-sm text-secondary mb-2">Demo Admin:</p>
+                <p class="text-sm"><strong>admin@spkkost.com</strong> / <strong>password</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/utils.js"></script>
+    <script>
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorMsg = document.getElementById('error-msg');
+
+            errorMsg.style.display = 'none';
+            showLoading('Logging in...');
+
+            try {
+                const result = await AuthAPI.login(email, password);
+                hideLoading();
+                showToast('Login berhasil!', 'success');
+
+                if (result.user.role === 'admin') {
+                    window.location.href = '/RekomendasiKost/pages/admin/dashboard.html';
+                } else {
+                    window.location.href = '/RekomendasiKost/';
+                }
+            } catch (err) {
+                hideLoading();
+                errorMsg.textContent = err.message;
+                errorMsg.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+
+</html>

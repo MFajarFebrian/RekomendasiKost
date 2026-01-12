@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Kost - Admin - SiKost</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/css/main.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    <link rel="stylesheet" href="../../assets/css/responsive.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="/RekomendasiKost/" class="navbar-brand">SiKost <span class="badge badge-primary">Admin</span></a>
+            <ul class="nav-menu">
+                <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+                <li><a href="manage-kost.html" class="nav-link active">Manage Kost</a></li>
+                <li><a href="configure-ahp.html" class="nav-link">Konfigurasi AHP</a></li>
+                <li><a href="#" class="nav-link" onclick="logout(); return false;">Logout</a></li>
+            </ul>
+            <button class="nav-toggle"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <main style="padding-top: 100px;">
+        <section class="section-sm">
+            <div class="container">
+                <div class="flex-between mb-5">
+                    <h1>Manage Kost</h1>
+                    <button class="btn btn-primary" onclick="openModal()">➕ Tambah Kost</button>
+                </div>
+
+                <div class="card" style="overflow-x: auto;">
+                    <table class="table" id="kost-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nama</th>
+                                <th>Harga</th>
+                                <th>Jarak Kampus</th>
+                                <th>Kebersihan</th>
+                                <th>Keamanan</th>
+                                <th>Fasilitas</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="kost-tbody">
+                            <tr>
+                                <td colspan="8" class="text-center">
+                                    <div class="spinner"></div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Add/Edit Modal -->
+    <div class="modal-overlay" id="kost-modal">
+        <div class="modal" style="max-width: 600px;">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modal-title">Tambah Kost</h4>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="kost-form">
+                    <input type="hidden" id="kost-id">
+                    <div class="form-group">
+                        <label class="form-label">Nama Kost *</label>
+                        <input type="text" class="form-control" id="nama" required>
+                    </div>
+                    <div class="grid grid-2">
+                        <div class="form-group">
+                            <label class="form-label">Jarak Kampus (km) *</label>
+                            <input type="number" class="form-control" id="jarak_kampus" step="0.1" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Jarak Market (km) *</label>
+                            <input type="number" class="form-control" id="jarak_market" step="0.1" min="0" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Harga per Bulan (Rp) *</label>
+                        <input type="number" class="form-control" id="harga" min="1" required>
+                    </div>
+                    <div class="grid grid-3">
+                        <div class="form-group">
+                            <label class="form-label">Kebersihan *</label>
+                            <select class="form-control form-select" id="kebersihan" required>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Keamanan *</label>
+                            <select class="form-control form-select" id="keamanan" required>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Fasilitas *</label>
+                            <select class="form-control form-select" id="fasilitas" required>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Alamat</label>
+                        <input type="text" class="form-control" id="alamat">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Deskripsi</label>
+                        <textarea class="form-control" id="deskripsi" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="Modal.close('kost-modal')">Batal</button>
+                <button class="btn btn-primary" onclick="saveKost()">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/utils.js"></script>
+    <script src="../../assets/js/app.js"></script>
+    <script>
+        let editingId = null;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const user = await checkAuth();
+            if (!user || user.role !== 'admin') {
+                window.location.href = '/RekomendasiKost/pages/login.html';
+                return;
+            }
+            Modal.init();
+            await loadKostList();
+        });
+
+        async function loadKostList() {
+            try {
+                const data = await KostAPI.getAll({ limit: 100 });
+                const tbody = document.getElementById('kost-tbody');
+
+                if (!data.items.length) {
+                    tbody.innerHTML = '<tr><td colspan="8" class="text-center text-secondary">Belum ada data.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = data.items.map(k => `
+                    <tr>
+                        <td>${k.id}</td>
+                        <td>${escapeHtml(k.nama)}</td>
+                        <td>${formatCurrency(k.harga)}</td>
+                        <td>${k.jarak_kampus} km</td>
+                        <td>${k.kebersihan}/5</td>
+                        <td>${k.keamanan}/5</td>
+                        <td>${k.fasilitas}/5</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline" onclick="editKost(${k.id})">Edit</button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteKost(${k.id})">Hapus</button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (e) {
+                document.getElementById('kost-tbody').innerHTML = `<tr><td colspan="8" class="text-danger">${e.message}</td></tr>`;
+            }
+        }
+
+        function openModal(id = null) {
+            editingId = id;
+            document.getElementById('modal-title').textContent = id ? 'Edit Kost' : 'Tambah Kost';
+            document.getElementById('kost-form').reset();
+            Modal.open('kost-modal');
+        }
+
+        async function editKost(id) {
+            try {
+                const kost = await KostAPI.getById(id);
+                editingId = id;
+                document.getElementById('modal-title').textContent = 'Edit Kost';
+                document.getElementById('nama').value = kost.nama;
+                document.getElementById('jarak_kampus').value = kost.jarak_kampus;
+                document.getElementById('jarak_market').value = kost.jarak_market;
+                document.getElementById('harga').value = kost.harga;
+                document.getElementById('kebersihan').value = kost.kebersihan;
+                document.getElementById('keamanan').value = kost.keamanan;
+                document.getElementById('fasilitas').value = kost.fasilitas;
+                document.getElementById('alamat').value = kost.alamat || '';
+                document.getElementById('deskripsi').value = kost.deskripsi || '';
+                Modal.open('kost-modal');
+            } catch (e) {
+                showToast(e.message, 'error');
+            }
+        }
+
+        async function saveKost() {
+            const data = {
+                nama: document.getElementById('nama').value,
+                jarak_kampus: parseFloat(document.getElementById('jarak_kampus').value),
+                jarak_market: parseFloat(document.getElementById('jarak_market').value),
+                harga: parseFloat(document.getElementById('harga').value),
+                kebersihan: parseInt(document.getElementById('kebersihan').value),
+                keamanan: parseInt(document.getElementById('keamanan').value),
+                fasilitas: parseInt(document.getElementById('fasilitas').value),
+                alamat: document.getElementById('alamat').value,
+                deskripsi: document.getElementById('deskripsi').value
+            };
+
+            try {
+                if (editingId) {
+                    await KostAPI.update(editingId, data);
+                    showToast('Kost berhasil diupdate!', 'success');
+                } else {
+                    await KostAPI.create(data);
+                    showToast('Kost berhasil ditambahkan!', 'success');
+                }
+                Modal.close('kost-modal');
+                await loadKostList();
+            } catch (e) {
+                showToast(e.message, 'error');
+            }
+        }
+
+        async function deleteKost(id) {
+            if (!confirm('Yakin ingin menghapus kost ini?')) return;
+            try {
+                await KostAPI.delete(id);
+                showToast('Kost berhasil dihapus!', 'success');
+                await loadKostList();
+            } catch (e) {
+                showToast(e.message, 'error');
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perhitungan TOPSIS Lengkap - SiKost</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #6366f1;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            color: #4f46e5;
+            margin: 30px 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e7ff;
+        }
+
+        h3 {
+            color: #6366f1;
+            margin: 20px 0 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        th,
+        td {
+            padding: 10px 12px;
+            text-align: left;
+            border: 1px solid #e2e8f0;
+            font-size: 13px;
+        }
+
+        th {
+            background: #6366f1;
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        tr:hover {
+            background: #e0e7ff;
+        }
+
+        .highlight {
+            background: #fef3c7 !important;
+            font-weight: bold;
+        }
+
+        .rank-1 {
+            background: #fef9c3 !important;
+        }
+
+        .rank-2 {
+            background: #e0e7ff !important;
+        }
+
+        .rank-3 {
+            background: #ffe4e6 !important;
+        }
+
+        .number {
+            text-align: right;
+            font-family: monospace;
+        }
+
+        .formula {
+            background: #1e1e1e;
+            color: #9cdcfe;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 15px;
+            background: #f1f5f9;
+            border-radius: 8px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #6366f1;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .badge-cost {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .badge-benefit {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .step {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .weights-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .weight-item {
+            background: #e0e7ff;
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .weight-item strong {
+            display: block;
+            color: #4f46e5;
+            font-size: 18px;
+        }
+
+        .final-ranking {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .rank-card {
+            background: white;
+            padding: 15px 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            min-width: 200px;
+        }
+
+        .rank-card.gold {
+            border-top: 4px solid #f59e0b;
+        }
+
+        .rank-card.silver {
+            border-top: 4px solid #94a3b8;
+        }
+
+        .rank-card.bronze {
+            border-top: 4px solid #ea580c;
+        }
+
+        .rank-number {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .rank-name {
+            font-size: 14px;
+            color: #64748b;
+            margin: 5px 0;
+        }
+
+        .rank-score {
+            font-size: 20px;
+            color: #6366f1;
+            font-weight: bold;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>📊 Perhitungan TOPSIS Lengkap</h1>
+        <p class="subtitle">Sistem Rekomendasi Kost (SiKost) - 20 Data Kost</p>
+
+        <div id="content"></div>
+    </div>
+
+    <script>
+        // Data 20 Kost dari Database
+        const kostData = [
+            { id: 1, nama: 'Kost Papipul Pakuwon Mezanine', jarak_kampus: 1.2, jarak_market: 0.5, harga: 2500000, kebersihan: 5, keamanan: 4, fasilitas: 5 },
+            { id: 2, nama: 'Kost Eleora Cikunir Tipe C', jarak_kampus: 2.5, jarak_market: 1, harga: 1299000, kebersihan: 4, keamanan: 5, fasilitas: 5 },
+            { id: 3, nama: 'Kost De Jatti', jarak_kampus: 3.1, jarak_market: 0.8, harga: 1400000, kebersihan: 4, keamanan: 4, fasilitas: 5 },
+            { id: 4, nama: 'Kost Delta Timur 102 Tipe A Pekayon', jarak_kampus: 1.8, jarak_market: 0.3, harga: 1674000, kebersihan: 5, keamanan: 5, fasilitas: 5 },
+            { id: 5, nama: 'Kost Fans Rooms', jarak_kampus: 0.5, jarak_market: 0.2, harga: 1500000, kebersihan: 3, keamanan: 3, fasilitas: 4 },
+            { id: 6, nama: 'Kost Krakatau 1B Tipe A', jarak_kampus: 2.2, jarak_market: 1.5, harga: 1250500, kebersihan: 4, keamanan: 3, fasilitas: 4 },
+            { id: 7, nama: 'Kost CRV Cikas Tipe A Galaxy', jarak_kampus: 1.5, jarak_market: 0.5, harga: 1325000, kebersihan: 5, keamanan: 5, fasilitas: 5 },
+            { id: 8, nama: 'Kost Eleora Cikunir Tipe A', jarak_kampus: 2.5, jarak_market: 1, harga: 956000, kebersihan: 4, keamanan: 4, fasilitas: 5 },
+            { id: 9, nama: 'Kost Pink Moon Tipe B', jarak_kampus: 0.9, jarak_market: 0.4, harga: 1350000, kebersihan: 4, keamanan: 3, fasilitas: 4 },
+            { id: 10, nama: 'Kost Ibu Datin Tipe C', jarak_kampus: 3.5, jarak_market: 1.2, harga: 800000, kebersihan: 3, keamanan: 3, fasilitas: 3 },
+            { id: 11, nama: 'Kost Khazanah VIP Semi apartment', jarak_kampus: 1.1, jarak_market: 0.6, harga: 1250000, kebersihan: 4, keamanan: 4, fasilitas: 5 },
+            { id: 12, nama: 'Kost Ezra Tipe A', jarak_kampus: 2, jarak_market: 1.1, harga: 700000, kebersihan: 3, keamanan: 2, fasilitas: 3 },
+            { id: 13, nama: 'Kost De Miracle Inthecost Tipe B', jarak_kampus: 1.6, jarak_market: 0.7, harga: 1500000, kebersihan: 4, keamanan: 4, fasilitas: 5 },
+            { id: 14, nama: 'Kost Khazanah Tipe Vvip Executive', jarak_kampus: 1.2, jarak_market: 0.6, harga: 1250000, kebersihan: 5, keamanan: 5, fasilitas: 5 },
+            { id: 15, nama: 'Kost Kayuringin', jarak_kampus: 2.8, jarak_market: 1.3, harga: 900000, kebersihan: 3, keamanan: 3, fasilitas: 3 },
+            { id: 16, nama: 'Kost Manohara', jarak_kampus: 0.8, jarak_market: 0.3, harga: 1750000, kebersihan: 5, keamanan: 4, fasilitas: 4 },
+            { id: 17, nama: 'Rumah Kontrakan FHS Rent House', jarak_kampus: 3, jarak_market: 1.5, harga: 1000000, kebersihan: 3, keamanan: 3, fasilitas: 3 },
+            { id: 18, nama: 'Kost Pink Moon Tipe C', jarak_kampus: 0.9, jarak_market: 0.4, harga: 1550000, kebersihan: 4, keamanan: 4, fasilitas: 4 },
+            { id: 19, nama: 'Kost Galaxy Living 1 Executive', jarak_kampus: 1.4, jarak_market: 0.5, harga: 1850000, kebersihan: 5, keamanan: 5, fasilitas: 5 },
+            { id: 20, nama: 'Kost Aa Kepin Vvip', jarak_kampus: 1.7, jarak_market: 0.8, harga: 1250000, kebersihan: 4, keamanan: 3, fasilitas: 4 }
+        ];
+
+        // Bobot dari Slider
+        const weights = {
+            jarak_kampus: 0.20,
+            jarak_market: 0.10,
+            harga: 0.30,
+            kebersihan: 0.15,
+            keamanan: 0.15,
+            fasilitas: 0.10
+        };
+
+        const criteria = ['jarak_kampus', 'jarak_market', 'harga', 'kebersihan', 'keamanan', 'fasilitas'];
+        const costCriteria = ['jarak_kampus', 'jarak_market', 'harga'];
+        const criteriaLabels = {
+            jarak_kampus: 'Jarak Kampus',
+            jarak_market: 'Jarak Market',
+            harga: 'Harga',
+            kebersihan: 'Kebersihan',
+            keamanan: 'Keamanan',
+            fasilitas: 'Fasilitas'
+        };
+
+        function formatNumber(num, decimals = 6) {
+            return Number(num).toFixed(decimals);
+        }
+
+        function formatCurrency(num) {
+            return new Intl.NumberFormat('id-ID').format(num);
+        }
+
+        // TOPSIS Calculation
+        function calculateTOPSIS() {
+            // Step 1: Calculate sqrt of sum of squares
+            const sqrtSums = {};
+            criteria.forEach(c => {
+                const sumSquares = kostData.reduce((sum, k) => sum + Math.pow(k[c], 2), 0);
+                sqrtSums[c] = Math.sqrt(sumSquares);
+            });
+
+            // Step 2: Normalize
+            const normalized = kostData.map(k => {
+                const norm = { nama: k.nama };
+                criteria.forEach(c => {
+                    norm[c] = k[c] / sqrtSums[c];
+                });
+                return norm;
+            });
+
+            // Step 3: Apply weights
+            const weighted = normalized.map(n => {
+                const w = { nama: n.nama };
+                criteria.forEach(c => {
+                    w[c] = n[c] * weights[c];
+                });
+                return w;
+            });
+
+            // Step 4: Ideal solutions
+            const idealPositive = {};
+            const idealNegative = {};
+            criteria.forEach(c => {
+                const values = weighted.map(w => w[c]);
+                if (costCriteria.includes(c)) {
+                    idealPositive[c] = Math.min(...values);
+                    idealNegative[c] = Math.max(...values);
+                } else {
+                    idealPositive[c] = Math.max(...values);
+                    idealNegative[c] = Math.min(...values);
+                }
+            });
+
+            // Step 5: Calculate distances
+            const distances = weighted.map(w => {
+                let dPlus = 0, dMinus = 0;
+                criteria.forEach(c => {
+                    dPlus += Math.pow(w[c] - idealPositive[c], 2);
+                    dMinus += Math.pow(w[c] - idealNegative[c], 2);
+                });
+                return {
+                    nama: w.nama,
+                    dPositive: Math.sqrt(dPlus),
+                    dNegative: Math.sqrt(dMinus)
+                };
+            });
+
+            // Step 6: Preference values
+            const preferences = distances.map(d => ({
+                nama: d.nama,
+                dPositive: d.dPositive,
+                dNegative: d.dNegative,
+                V: d.dNegative / (d.dPositive + d.dNegative)
+            }));
+
+            // Sort by V descending
+            preferences.sort((a, b) => b.V - a.V);
+
+            return { sqrtSums, normalized, weighted, idealPositive, idealNegative, distances, preferences };
+        }
+
+        // Render results
+        function render() {
+            const result = calculateTOPSIS();
+            let html = '';
+
+            // Data Kost
+            html += `<div class="card">
+                <div class="step">DATA</div>
+                <h2>📋 Data 20 Kost</h2>
+                <table>
+                    <tr>
+                        <th>No</th><th>Nama Kost</th>
+                        <th class="number">Jarak Kampus (km)</th>
+                        <th class="number">Jarak Market (km)</th>
+                        <th class="number">Harga (Rp)</th>
+                        <th class="number">Kebersihan</th>
+                        <th class="number">Keamanan</th>
+                        <th class="number">Fasilitas</th>
+                    </tr>
+                    ${kostData.map((k, i) => `
+                        <tr>
+                            <td>${i + 1}</td><td>${k.nama}</td>
+                            <td class="number">${k.jarak_kampus}</td>
+                            <td class="number">${k.jarak_market}</td>
+                            <td class="number">${formatCurrency(k.harga)}</td>
+                            <td class="number">${k.kebersihan}</td>
+                            <td class="number">${k.keamanan}</td>
+                            <td class="number">${k.fasilitas}</td>
+                        </tr>
+                    `).join('')}
+                </table>
+                <p><span class="badge badge-cost">Cost</span> Jarak Kampus, Jarak Market, Harga (semakin kecil semakin baik)</p>
+                <p><span class="badge badge-benefit">Benefit</span> Kebersihan, Keamanan, Fasilitas (semakin besar semakin baik)</p>
+            </div>`;
+
+            // Weights
+            html += `<div class="card">
+                <div class="step">BOBOT</div>
+                <h2>⚖️ Bobot Kriteria (dari Slider)</h2>
+                <div class="weights-box">
+                    ${criteria.map(c => `
+                        <div class="weight-item">
+                            <strong>${(weights[c] * 100).toFixed(0)}%</strong>
+                            ${criteriaLabels[c]}
+                        </div>
+                    `).join('')}
+                </div>
+            </div>`;
+
+            // Step 1: Normalization divisors
+            html += `<div class="card">
+                <div class="step">LANGKAH 1</div>
+                <h2>📐 Normalisasi - Pembagi (√Σx²)</h2>
+                <div class="formula">rᵢⱼ = xᵢⱼ / √(Σxᵢⱼ²)</div>
+                <table>
+                    <tr><th>Kriteria</th><th class="number">√Σx²</th></tr>
+                    ${criteria.map(c => `
+                        <tr><td>${criteriaLabels[c]}</td><td class="number">${formatNumber(result.sqrtSums[c], 4)}</td></tr>
+                    `).join('')}
+                </table>
+            </div>`;
+
+            // Normalized matrix
+            html += `<div class="card">
+                <h3>Matriks Ternormalisasi (R)</h3>
+                <table>
+                    <tr><th>Nama</th>${criteria.map(c => `<th class="number">${criteriaLabels[c]}</th>`).join('')}</tr>
+                    ${result.normalized.map(n => `
+                        <tr>
+                            <td>${n.nama}</td>
+                            ${criteria.map(c => `<td class="number">${formatNumber(n[c], 6)}</td>`).join('')}
+                        </tr>
+                    `).join('')}
+                </table>
+            </div>`;
+
+            // Weighted matrix
+            html += `<div class="card">
+                <div class="step">LANGKAH 2</div>
+                <h2>⚡ Matriks Terbobot (Y)</h2>
+                <div class="formula">yᵢⱼ = rᵢⱼ × wⱼ</div>
+                <table>
+                    <tr><th>Nama</th>${criteria.map(c => `<th class="number">${criteriaLabels[c]} (×${weights[c]})</th>`).join('')}</tr>
+                    ${result.weighted.map(w => `
+                        <tr>
+                            <td>${w.nama}</td>
+                            ${criteria.map(c => `<td class="number">${formatNumber(w[c], 6)}</td>`).join('')}
+                        </tr>
+                    `).join('')}
+                </table>
+            </div>`;
+
+            // Ideal solutions
+            html += `<div class="card">
+                <div class="step">LANGKAH 3</div>
+                <h2>🎯 Solusi Ideal</h2>
+                <table>
+                    <tr><th>Kriteria</th><th>Tipe</th><th class="number">A⁺ (Terbaik)</th><th class="number">A⁻ (Terburuk)</th></tr>
+                    ${criteria.map(c => `
+                        <tr>
+                            <td>${criteriaLabels[c]}</td>
+                            <td><span class="badge ${costCriteria.includes(c) ? 'badge-cost' : 'badge-benefit'}">${costCriteria.includes(c) ? 'Cost' : 'Benefit'}</span></td>
+                            <td class="number">${formatNumber(result.idealPositive[c], 6)}</td>
+                            <td class="number">${formatNumber(result.idealNegative[c], 6)}</td>
+                        </tr>
+                    `).join('')}
+                </table>
+            </div>`;
+
+            // Distances and Preferences
+            html += `<div class="card">
+                <div class="step">LANGKAH 4 & 5</div>
+                <h2>📏 Jarak & Nilai Preferensi</h2>
+                <div class="formula">D⁺ = √[Σ(yᵢⱼ - A⁺ⱼ)²] &nbsp;&nbsp;|&nbsp;&nbsp; D⁻ = √[Σ(yᵢⱼ - A⁻ⱼ)²] &nbsp;&nbsp;|&nbsp;&nbsp; V = D⁻ / (D⁺ + D⁻)</div>
+                <table>
+                    <tr><th>Nama</th><th class="number">D⁺</th><th class="number">D⁻</th><th class="number">V</th><th class="number">%</th></tr>
+                    ${result.preferences.map((p, i) => `
+                        <tr class="${i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : i === 2 ? 'rank-3' : ''}">
+                            <td>${p.nama}</td>
+                            <td class="number">${formatNumber(p.dPositive, 6)}</td>
+                            <td class="number">${formatNumber(p.dNegative, 6)}</td>
+                            <td class="number">${formatNumber(p.V, 6)}</td>
+                            <td class="number"><strong>${(p.V * 100).toFixed(2)}%</strong></td>
+                        </tr>
+                    `).join('')}
+                </table>
+            </div>`;
+
+            // Final Ranking
+            html += `<div class="card">
+                <div class="step">HASIL AKHIR</div>
+                <h2>🏆 Ranking Rekomendasi</h2>
+                <div class="final-ranking">
+                    <div class="rank-card gold">
+                        <div class="rank-number">🥇 1</div>
+                        <div class="rank-name">${result.preferences[0].nama}</div>
+                        <div class="rank-score">${(result.preferences[0].V * 100).toFixed(2)}%</div>
+                    </div>
+                    <div class="rank-card silver">
+                        <div class="rank-number">🥈 2</div>
+                        <div class="rank-name">${result.preferences[1].nama}</div>
+                        <div class="rank-score">${(result.preferences[1].V * 100).toFixed(2)}%</div>
+                    </div>
+                    <div class="rank-card bronze">
+                        <div class="rank-number">🥉 3</div>
+                        <div class="rank-name">${result.preferences[2].nama}</div>
+                        <div class="rank-score">${(result.preferences[2].V * 100).toFixed(2)}%</div>
+                    </div>
+                </div>
+                <table>
+                    <tr><th>Rank</th><th>Nama Kost</th><th class="number">Nilai V</th><th class="number">Kecocokan</th></tr>
+                    ${result.preferences.map((p, i) => `
+                        <tr class="${i < 3 ? 'highlight' : ''}">
+                            <td><strong>${i + 1}</strong></td>
+                            <td>${p.nama}</td>
+                            <td class="number">${formatNumber(p.V, 6)}</td>
+                            <td class="number"><strong>${(p.V * 100).toFixed(2)}%</strong></td>
+                        </tr>
+                    `).join('')}
+                </table>
+            </div>`;
+
+            document.getElementById('content').innerHTML = html;
+        }
+
+        // Run on load
+        render();
+    </script>
+</body>
+
+</html>
