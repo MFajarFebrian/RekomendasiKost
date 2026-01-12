@@ -21,7 +21,8 @@ class Database
     {
         // Load from environment variables (for Vercel/Supabase) or default to local
         $this->connection = getenv('DB_CONNECTION') ?: 'mysql';
-        $this->host = getenv('DB_HOST') ?: '127.0.0.1';
+        $env_host = getenv('DB_HOST') ?: '127.0.0.1';
+        $this->host = gethostbyname($env_host);
         $this->db_name = getenv('DB_NAME') ?: 'spk_kost';
         $this->username = getenv('DB_USER') ?: 'root';
         $this->password = getenv('DB_PASSWORD') ?: '';

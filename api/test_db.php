@@ -11,6 +11,7 @@ $vars = ['DB_CONNECTION', 'DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PORT'];
 foreach ($vars as $var) {
     echo "$var: " . (getenv($var) ?: '(not set)') . "<br>";
 }
+echo "Resolved DB_HOST (IPv4): " . gethostbyname(getenv('DB_HOST')) . "<br>";
 echo "DB_PASSWORD: " . (getenv('DB_PASSWORD') ? '******' : '(not set)') . "<br>";
 
 echo "<h2>extensions</h2>";
