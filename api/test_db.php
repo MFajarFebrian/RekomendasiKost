@@ -4,7 +4,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-echo "<h1>Vercel PHP Debug</h1>";
+echo "<h1>Vercel PHP Debug (API Folder)</h1>";
 
 echo "<h2>Environment Variables</h2>";
 $vars = ['DB_CONNECTION', 'DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PORT'];
@@ -17,7 +17,8 @@ echo "<h2>extensions</h2>";
 echo "PDO drivers: " . implode(', ', PDO::getAvailableDrivers()) . "<br>";
 
 echo "<h2>Database Connection Test</h2>";
-require_once __DIR__ . '/config/database.php';
+// Note: Adjusted path for api folder
+require_once __DIR__ . '/../config/database.php';
 
 try {
     $db = Database::getInstance();
