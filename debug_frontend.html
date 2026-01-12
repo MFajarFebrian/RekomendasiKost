@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend API Debugger</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .status {
+            font-weight: bold;
+        }
+
+        .success {
+            color: green;
+        }
+
+        .error {
+            color: red;
+        }
+
+        pre {
+            background: #eee;
+            padding: 10px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Frontend API Debugger</h1>
+
+    <div class="card">
+        <h3>Configuration</h3>
+        <p>Hostname: <span id="hostname">...</span></p>
+        <p>API Base URL: <span id="api-base">...</span></p>
+    </div>
+
+    <div class="card">
+        <h3>Test 1: Fetch /kampus</h3>
+        <p>Status: <span id="status-1" class="status">Testing...</span></p>
+        <pre id="response-1">Waiting...</pre>
+    </div>
+
+    <div class="card">
+        <h3>Test 2: Fetch /kost</h3>
+        <p>Status: <span id="status-2" class="status">Testing...</span></p>
+        <pre id="response-2">Waiting...</pre>
+    </div>
+
+    <script>
+        // Copy of logic from api.js
+        const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? (window.location.pathname.includes('/RekomendasiKost_2/') ? '/RekomendasiKost_2/api' : '/RekomendasiKost/api')
+            : '/api';
+
+        document.getElementById('hostname').textContent = window.location.hostname;
+        document.getElementById('api-base').textContent = API_BASE_URL;
+
+        async function testEndpoint(endpoint, statusId, responseId) {
+            const statusEl = document.getElementById(statusId);
+            const responseEl = document.getElementById(responseId);
+            const url = API_BASE_URL + endpoint;
+
+            try {
+                responseEl.textContent = `Fetching: ${url}...`;
+                const response = await fetch(url);
+
+                statusEl.textContent = `${response.status} ${response.statusText}`;
+
+                const text = await response.text();
+                try {
+                    const json = JSON.parse(text);
+                    responseEl.textContent = JSON.stringify(json, null, 2);
+                    statusEl.classList.add('success');
+                } catch (e) {
+                    responseEl.textContent = "Response is NOT valid JSON:\n\n" + text;
+                    statusEl.classList.add('error');
+                    statusEl.textContent += " (JSON Parse Error)";
+                }
+            } catch (error) {
+                statusEl.textContent = "Network Error";
+                statusEl.classList.add('error');
+                responseEl.textContent = error.message;
+            }
+        }
+
+        testEndpoint('/kampus', 'status-1', 'response-1');
+        testEndpoint('/kost', 'status-2', 'response-2');
+    </script>
+</body>
+
+</html>
