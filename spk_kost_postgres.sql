@@ -48,11 +48,11 @@ CREATE INDEX idx_kampus_kota ON kampus(kota);
 --
 
 INSERT INTO kampus (nama, kode, alamat, kota, latitude, longitude, is_active) VALUES
-('Universitas Gunadarma Kampus J1', 'GD-J1', 'Jl. Margonda Raya No.100', 'Bekasi', -6.37020000, 106.82340000, TRUE),
-('Universitas Indonesia', 'UI', 'Kampus UI Depok', 'Depok', -6.36080000, 106.82720000, TRUE),
-('Institut Pertanian Bogor', 'IPB', 'Jl. Raya Dramaga', 'Bogor', -6.55890000, 106.72680000, TRUE),
-('Universitas Pancasila', 'UP', 'Jl. Raya Lenteng Agung', 'Jakarta', -6.32980000, 106.83120000, TRUE),
-('Universitas Mercu Buana', 'UMB', 'Jl. Meruya Selatan', 'Jakarta', -6.21560000, 106.73420000, TRUE);
+('Universitas Gunadarma Kampus J1', 'GD-J1', 'Jl. Margonda Raya No.100', 'Bekasi', -6.37020000, 106.82340000, 1),
+('Universitas Indonesia', 'UI', 'Kampus UI Depok', 'Depok', -6.36080000, 106.82720000, 1),
+('Institut Pertanian Bogor', 'IPB', 'Jl. Raya Dramaga', 'Bogor', -6.55890000, 106.72680000, 1),
+('Universitas Pancasila', 'UP', 'Jl. Raya Lenteng Agung', 'Jakarta', -6.32980000, 106.83120000, 1),
+('Universitas Mercu Buana', 'UMB', 'Jl. Meruya Selatan', 'Jakarta', -6.21560000, 106.73420000, 1);
 
 -- --------------------------------------------------------
 
@@ -90,26 +90,26 @@ CREATE INDEX idx_kost_kampus_id ON kost(kampus_id);
 --
 
 INSERT INTO kost (nama, jarak_kampus, jarak_market, harga, kebersihan, keamanan, fasilitas, kampus_id, is_active) VALUES
-('Kost Papipul Pakuwon Mezanine', 1.2, 0.5, 2500000, 5, 4, 5, 1, TRUE),
-('Kost Eleora Cikunir Tipe C', 2.5, 1, 1299000, 4, 5, 5, 1, TRUE),
-('Kost De Jatti', 3.1, 0.8, 1400000, 4, 4, 5, 1, TRUE),
-('Kost Delta Timur 102 Tipe A Pekayon', 1.8, 0.3, 1674000, 5, 5, 5, 1, TRUE),
-('Kost Fans Rooms', 0.5, 0.2, 1500000, 3, 3, 4, 1, TRUE),
-('Kost Krakatau 1B Tipe A', 2.2, 1.5, 1250500, 4, 3, 4, 1, TRUE),
-('Kost CRV Cikas Tipe A Galaxy', 1.5, 0.5, 1325000, 5, 5, 5, 1, TRUE),
-('Kost Eleora Cikunir Tipe A', 2.5, 1, 956000, 4, 4, 5, 1, TRUE),
-('Kost Pink Moon Tipe B', 0.9, 0.4, 1350000, 4, 3, 4, 1, TRUE),
-('Kost Ibu Datin Tipe C', 3.5, 1.2, 800000, 3, 3, 3, 1, TRUE),
-('Kost Khazanah VIP Semi apartment', 1.1, 0.6, 1250000, 4, 4, 5, 1, TRUE),
-('Kost Ezra Tipe A', 2, 1.1, 700000, 3, 2, 3, 1, TRUE),
-('Kost De Miracle Inthecost Tipe B', 1.6, 0.7, 1500000, 4, 4, 5, 1, TRUE),
-('Kost Khazanah Tipe Vvip Executive', 1.2, 0.6, 1250000, 5, 5, 5, 1, TRUE),
-('Kost Kayuringin', 2.8, 1.3, 900000, 3, 3, 3, 1, TRUE),
-('Kost Manohara', 0.8, 0.3, 1750000, 5, 4, 4, 1, TRUE),
-('Rumah Kontrakan FHS Rent House', 3, 1.5, 1000000, 3, 3, 3, 1, TRUE),
-('Kost Pink Moon Tipe C', 0.9, 0.4, 1550000, 4, 4, 4, 1, TRUE),
-('Kost Galaxy Living 1 Executive', 1.4, 0.5, 1850000, 5, 5, 5, 1, TRUE),
-('Kost Aa Kepin Vvip', 1.7, 0.8, 1250000, 4, 3, 4, 1, TRUE);
+('Kost Papipul Pakuwon Mezanine', 1.2, 0.5, 2500000, 5, 4, 5, 1, 1),
+('Kost Eleora Cikunir Tipe C', 2.5, 1, 1299000, 4, 5, 5, 1, 1),
+('Kost De Jatti', 3.1, 0.8, 1400000, 4, 4, 5, 1, 1),
+('Kost Delta Timur 102 Tipe A Pekayon', 1.8, 0.3, 1674000, 5, 5, 5, 1, 1),
+('Kost Fans Rooms', 0.5, 0.2, 1500000, 3, 3, 4, 1, 1),
+('Kost Krakatau 1B Tipe A', 2.2, 1.5, 1250500, 4, 3, 4, 1, 1),
+('Kost CRV Cikas Tipe A Galaxy', 1.5, 0.5, 1325000, 5, 5, 5, 1, 1),
+('Kost Eleora Cikunir Tipe A', 2.5, 1, 956000, 4, 4, 5, 1, 1),
+('Kost Pink Moon Tipe B', 0.9, 0.4, 1350000, 4, 3, 4, 1, 1),
+('Kost Ibu Datin Tipe C', 3.5, 1.2, 800000, 3, 3, 3, 1, 1),
+('Kost Khazanah VIP Semi apartment', 1.1, 0.6, 1250000, 4, 4, 5, 1, 1),
+('Kost Ezra Tipe A', 2, 1.1, 700000, 3, 2, 3, 1, 1),
+('Kost De Miracle Inthecost Tipe B', 1.6, 0.7, 1500000, 4, 4, 5, 1, 1),
+('Kost Khazanah Tipe Vvip Executive', 1.2, 0.6, 1250000, 5, 5, 5, 1, 1),
+('Kost Kayuringin', 2.8, 1.3, 900000, 3, 3, 3, 1, 1),
+('Kost Manohara', 0.8, 0.3, 1750000, 5, 4, 4, 1, 1),
+('Rumah Kontrakan FHS Rent House', 3, 1.5, 1000000, 3, 3, 3, 1, 1),
+('Kost Pink Moon Tipe C', 0.9, 0.4, 1550000, 4, 4, 4, 1, 1),
+('Kost Galaxy Living 1 Executive', 1.4, 0.5, 1850000, 5, 5, 5, 1, 1),
+('Kost Aa Kepin Vvip', 1.7, 0.8, 1250000, 4, 3, 4, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -239,7 +239,7 @@ CREATE TABLE users (
   telepon VARCHAR(20) DEFAULT NULL,
   role VARCHAR(10) NOT NULL DEFAULT 'user' CHECK (role IN ('admin', 'user')),
   foto_profil VARCHAR(255) DEFAULT NULL,
-  is_active BOOLEAN NOT NULL DEFAULT TRUE,
+  is_active SMALLINT NOT NULL DEFAULT 1,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -251,7 +251,7 @@ CREATE INDEX idx_users_role ON users(role);
 --
 
 INSERT INTO users (email, password, nama, role, is_active) VALUES
-('admin@spkkost.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Administrator', 'admin', TRUE);
+('admin@spkkost.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Administrator', 'admin', 1);
 
 -- --------------------------------------------------------
 

@@ -29,7 +29,7 @@ class Database
         
         try {
             if ($this->connection === 'pgsql') {
-                $dsn = "pgsql:host={$this->host};port={$this->port};dbname={$this->db_name}";
+                $dsn = "pgsql:host={$this->host};port={$this->port};dbname={$this->db_name};sslmode=require";
             } else {
                 $dsn = "mysql:host={$this->host};port={$this->port};dbname={$this->db_name};charset=utf8mb4";
             }
