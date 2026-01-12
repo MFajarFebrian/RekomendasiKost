@@ -3,7 +3,10 @@
  * Fetch wrapper and API endpoints
  */
 
-const API_BASE_URL = '/RekomendasiKost/api';
+// Determine API base URL based on environment
+const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? (window.location.pathname.includes('/RekomendasiKost_2/') ? '/RekomendasiKost_2/api' : '/RekomendasiKost/api')
+    : '/api';
 
 /**
  * Base API class for making HTTP requests

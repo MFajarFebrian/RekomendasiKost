@@ -21,11 +21,11 @@
     <!-- Navbar -->
     <nav class="navbar transparent" data-transparent="true">
         <div class="container">
-            <a href="/RekomendasiKost/" class="navbar-brand">SiKost</a>
+            <a href="index.html" class="navbar-brand">SiKost</a>
             <ul class="nav-menu">
-                <li><a href="/RekomendasiKost/" class="nav-link active">Home</a></li>
-                <li><a href="/RekomendasiKost/pages/kost-list.html" class="nav-link">Daftar Kost</a></li>
-                <li><a href="/RekomendasiKost/pages/recommendations.html" class="nav-link">Rekomendasi</a></li>
+                <li><a href="index.html" class="nav-link active">Home</a></li>
+                <li><a href="pages/kost-list.html" class="nav-link">Daftar Kost</a></li>
+                <li><a href="pages/recommendations.html" class="nav-link">Rekomendasi</a></li>
             </ul>
             <button class="nav-toggle" aria-label="Toggle navigation">
                 <span></span><span></span><span></span>
@@ -43,9 +43,9 @@
                     <p class="hero-description">Menggunakan metode AHP-TOPSIS untuk memberikan rekomendasi kost yang
                         objektif dan terukur berdasarkan kriteria pilihanmu.</p>
                     <div class="flex" style="gap: var(--space-3);">
-                        <a href="/RekomendasiKost/pages/recommendations.html" class="btn btn-primary btn-lg">Cari
+                        <a href="pages/recommendations.html" class="btn btn-primary btn-lg">Cari
                             Rekomendasi</a>
-                        <a href="/RekomendasiKost/pages/kost-list.html" class="btn btn-outline btn-lg"
+                        <a href="pages/kost-list.html" class="btn btn-outline btn-lg"
                             style="background: rgba(255,255,255,0.1); border-color: white; color: white;">Lihat Semua
                             Kost</a>
                     </div>
@@ -107,7 +107,7 @@
                     </div>
                 </div>
                 <div class="text-center mt-6">
-                    <a href="/RekomendasiKost/pages/kost-list.html" class="btn btn-outline">Lihat Semua Kost →</a>
+                    <a href="pages/kost-list.html" class="btn btn-outline">Lihat Semua Kost →</a>
                 </div>
             </div>
         </section>
@@ -119,7 +119,7 @@
                 <p class="mt-4 mb-6" style="opacity: 0.9; max-width: 500px; margin-left: auto; margin-right: auto;">
                     Gunakan
                     sistem rekomendasi kami untuk mendapatkan hasil yang optimal berdasarkan preferensimu.</p>
-                <a href="/RekomendasiKost/pages/recommendations.html" class="btn"
+                <a href="pages/recommendations.html" class="btn"
                     style="background: white; color: var(--primary-purple);">Mulai Sekarang</a>
             </div>
         </section>
@@ -137,9 +137,9 @@
                 <div>
                     <h5 class="footer-title">Menu</h5>
                     <div class="footer-links">
-                        <a href="/RekomendasiKost/">Home</a>
-                        <a href="/RekomendasiKost/pages/kost-list.html">Daftar Kost</a>
-                        <a href="/RekomendasiKost/pages/recommendations.html">Rekomendasi</a>
+                        <a href="index.html">Home</a>
+                        <a href="pages/kost-list.html">Daftar Kost</a>
+                        <a href="pages/recommendations.html">Rekomendasi</a>
                     </div>
                 </div>
                 <div>
@@ -194,7 +194,7 @@
                                 <span>📍 ${formatDistance(kost.jarak_kampus)} dari kampus</span>
                                 <span>⭐ ${((kost.kebersihan + kost.keamanan + kost.fasilitas) / 3).toFixed(1)}</span>
                             </div>
-                            <a href="/RekomendasiKost/pages/kost-detail.html?id=${kost.id}" class="btn btn-outline" style="width: 100%;">Lihat Detail</a>
+                            <a href="pages/kost-detail.html?id=${kost.id}" class="btn btn-outline" style="width: 100%;">Lihat Detail</a>
                         </div>
                     </div>
                 `).join('');
