@@ -22,7 +22,14 @@ class Database
         // Load from environment variables (for Vercel/Supabase) or default to local
         $this->connection = getenv('DB_CONNECTION') ?: 'mysql';
         $env_host = getenv('DB_HOST') ?: '127.0.0.1';
-        $this->host = gethostbyname($env_host);
+        
+        // Force IPv4 resolution
+        if ($this->connection === 'pgsql' && $env_host !== '127.0.0.1' && $env_host !== 'localhost') {
+            $dns = dns_get_record($env_host, DNS_A);
+            $this->host = isset($dns[0]['ip']) ? $dns[0]['ip'] : $env_host;
+        } else {
+            $this->host = $env_host;
+        }
         $this->db_name = getenv('DB_NAME') ?: 'spk_kost';
         $this->username = getenv('DB_USER') ?: 'root';
         $this->password = getenv('DB_PASSWORD') ?: '';

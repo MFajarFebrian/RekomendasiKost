@@ -11,7 +11,10 @@ $vars = ['DB_CONNECTION', 'DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PORT'];
 foreach ($vars as $var) {
     echo "$var: " . (getenv($var) ?: '(not set)') . "<br>";
 }
-echo "Resolved DB_HOST (IPv4): " . gethostbyname(getenv('DB_HOST')) . "<br>";
+$host = getenv('DB_HOST');
+$dns_a = dns_get_record($host, DNS_A);
+echo "DNS_A Records: <pre>" . print_r($dns_a, true) . "</pre>";
+echo "Resolved IP: " . ($dns_a[0]['ip'] ?? 'Failed to resolve') . "<br>";
 echo "DB_PASSWORD: " . (getenv('DB_PASSWORD') ? '******' : '(not set)') . "<br>";
 
 echo "<h2>extensions</h2>";
