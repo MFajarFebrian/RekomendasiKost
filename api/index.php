@@ -58,6 +58,12 @@ $path = trim($path, '/');
 // Get request body for POST/PUT
 $input = json_decode(file_get_contents('php://input'), true) ?? [];
 
+// Debug Route
+if ($path === 'test_db.php') {
+    require __DIR__ . '/test_db.php';
+    exit;
+}
+
 // Route the request
 require_once __DIR__ . '/../controllers/KostController.php';
 require_once __DIR__ . '/../controllers/SPKController.php';
