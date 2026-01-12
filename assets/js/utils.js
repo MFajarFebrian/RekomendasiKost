@@ -7,10 +7,12 @@ function formatCurrency(amount) {
         style: 'currency',
         currency: 'IDR',
         minimumFractionDigits: 0
-    }).format(amount);
+    }).format(Number(amount));
 }
 
 function formatDistance(km) {
+    km = parseFloat(km);
+    if (isNaN(km)) return '0 m';
     return km < 1 ? `${Math.round(km * 1000)} m` : `${km.toFixed(1)} km`;
 }
 
