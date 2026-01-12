@@ -199,7 +199,8 @@
                     </div>
                 `).join('');
             } catch (error) {
-                container.innerHTML = '<p class="text-center text-danger">Gagal memuat data.</p>';
+                console.error('Error loading kost:', error);
+                container.innerHTML = `<p class="text-center text-danger">Gagal memuat data: ${error.message}</p>`;
             }
         }
     </script>

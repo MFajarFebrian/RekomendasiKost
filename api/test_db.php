@@ -39,6 +39,17 @@ try {
     $kampusList = Kampus::getAll();
     echo "Kampus::getAll() returned " . count($kampusList) . " items.<br>";
     echo "First item name: " . ($kampusList[0]['nama'] ?? 'N/A') . "<br>";
+
+    echo "<h3>Kost Model Test (Join Query)</h3>";
+    require_once __DIR__ . '/../models/Kost.php';
+    $kostList = Kost::getAll(['limit' => 5]);
+    echo "Kost::getAll() returned " . count($kostList['items']) . " items.<br>";
+    if (count($kostList['items']) > 0) {
+        echo "First kost name: " . ($kostList['items'][0]['nama'] ?? 'N/A') . "<br>";
+        echo "Kampus name (joined): " . ($kostList['items'][0]['kampus_nama'] ?? 'N/A') . "<br>";
+    } else {
+        echo "No kost data found.<br>";
+    }
     
 } catch (Exception $e) {
     echo "Connection Failed: " . $e->getMessage();
