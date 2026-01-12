@@ -28,11 +28,17 @@ try {
     $db = Database::getInstance();
     $conn = $db->getConnection();
     echo "Connection successful!<br>";
-    
     echo "<h3>Query Test</h3>";
     $stmt = $db->query("SELECT count(*) as count FROM kampus");
     $result = $stmt->fetch();
-    echo "Count from 'kampus' table: " . $result['count'];
+    echo "Count from 'kampus' table: " . $result['count'] . "<br>";
+
+    echo "<h3>Model Loading Test</h3>";
+    require_once __DIR__ . '/../models/Kampus.php';
+    echo "Kampus model loaded.<br>";
+    $kampusList = Kampus::getAll();
+    echo "Kampus::getAll() returned " . count($kampusList) . " items.<br>";
+    echo "First item name: " . ($kampusList[0]['nama'] ?? 'N/A') . "<br>";
     
 } catch (Exception $e) {
     echo "Connection Failed: " . $e->getMessage();
