@@ -92,9 +92,6 @@ class TOPSISService {
             $normalized[] = $normAlt;
         }
         
-        // Save to database
-        SPK::saveNormalisasi($normalized);
-        
         return $normalized;
     }
     
@@ -167,10 +164,6 @@ class TOPSISService {
             $dNegative[] = ['nama' => $alt['nama'], 'dNegatif' => sqrt($dMinus)];
         }
         
-        // Save to database
-        SPK::saveDPositif($dPositive);
-        SPK::saveDNegatif($dNegative);
-        
         return [
             'positive' => $dPositive,
             'negative' => $dNegative
@@ -198,9 +191,6 @@ class TOPSISService {
         usort($preferenceValues, function($a, $b) {
             return $b['val'] <=> $a['val'];
         });
-        
-        // Save to database
-        SPK::saveNilaiPref($preferenceValues);
         
         return $preferenceValues;
     }
@@ -264,91 +254,37 @@ class TOPSISService {
     /**
      * Get calculation details for specific kost
      */
+    /**
+     * Get calculation details for specific kost (Realtime Calculation)
+     */
     public function getDetails($kostId) {
-        $kost = Kost::getById($kostId);
+        // Run full calculation
+        $result = $this->calculateRanking();
         
-        if (!$kost) {
-            throw new Exception("Kost not found");
-        }
-        
-        $normalized = SPK::getNormalisasi();
-        $dPositive = SPK::getDPositif();
-        $dNegative = SPK::getDNegatif();
-        $preferences = SPK::getNilaiPref();
-        $weights = SPK::getWeights();
-        
-        // Find by name
-        $nama = $kost['nama'];
-        
-        $normData = null;
-        foreach ($normalized as $n) {
-            if ($n['nama'] === $nama) {
-                $normData = $n;
+        // Find the specific kost in recommendations
+        $target = null;
+        foreach ($result['recommendations'] as $rec) {
+            if ($rec['kost_id'] == $kostId) {
+                $target = $rec;
                 break;
             }
         }
         
-        $dPosData = null;
-        foreach ($dPositive as $dp) {
-            if ($dp['nama'] === $nama) {
-                $dPosData = $dp;
-                break;
-            }
+        if (!$target) {
+            throw new Exception("Kost details not found in calculation results");
         }
         
-        $dNegData = null;
-        foreach ($dNegative as $dn) {
-            if ($dn['nama'] === $nama) {
-                $dNegData = $dn;
-                break;
-            }
-        }
-        
-        $prefData = null;
-        $rank = 0;
-        foreach ($preferences as $i => $p) {
-            if ($p['nama'] === $nama) {
-                $prefData = $p;
-                $rank = $i + 1;
-                break;
-            }
-        }
-        
-        if (!$normData || !$dPosData || !$dNegData || !$prefData) {
-            throw new Exception("Calculation data not found. Please run TOPSIS calculation first.");
-        }
-        
+        // Map structure to match frontend expectation
         return [
-            'kost_id' => $kost['id'],
-            'kost_nama' => $nama,
-            'original_values' => [
-                'jarak_kampus' => $kost['jarak_kampus'],
-                'jarak_market' => $kost['jarak_market'],
-                'harga' => $kost['harga'],
-                'kebersihan' => $kost['kebersihan'],
-                'keamanan' => $kost['keamanan'],
-                'fasilitas' => $kost['fasilitas']
-            ],
-            'normalized_values' => [
-                'jarak_kampus' => $normData['jarak_kampus'],
-                'jarak_market' => $normData['jarak_market'],
-                'harga' => $normData['harga'],
-                'kebersihan' => $normData['kebersihan'],
-                'keamanan' => $normData['keamanan'],
-                'fasilitas' => $normData['fasilitas']
-            ],
-            'weighted_normalized_values' => [
-                'jarak_kampus' => $normData['jarak_kampus'] * $weights['jarak_kampus'],
-                'jarak_market' => $normData['jarak_market'] * $weights['jarak_market'],
-                'harga' => $normData['harga'] * $weights['harga'],
-                'kebersihan' => $normData['kebersihan'] * $weights['kebersihan'],
-                'keamanan' => $normData['keamanan'] * $weights['keamanan'],
-                'fasilitas' => $normData['fasilitas'] * $weights['fasilitas']
-            ],
-            'd_positive' => $dPosData['dPositif'],
-            'd_negative' => $dNegData['dNegatif'],
-            'preference_value' => $prefData['val'],
-            'rank' => $rank
+            'kost_id' => $target['kost_id'],
+            'kost_nama' => $target['nama'],
+            'original_values' => $target['details'],
+            'normalized_values' => $target['normalized_values'],
+            'weighted_normalized_values' => $target['weighted_values'],
+            'd_positive' => $target['d_positive'],
+            'd_negative' => $target['d_negative'],
+            'preference_value' => $target['score'],
+            'rank' => $target['rank']
         ];
     }
     
@@ -356,6 +292,6 @@ class TOPSISService {
      * Get existing results from database
      */
     public function getResults() {
-        return SPK::getResults();
+        return $this->calculateRanking();
     }
 }
