@@ -69,8 +69,10 @@
 
                 <!-- Kost Grid -->
                 <div class="grid grid-3" id="kost-grid">
-                    <div class="text-center p-6">
+                    <div class="text-center p-6"
+                        style="grid-column: 1/-1; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 200px;">
                         <div class="spinner"></div>
+                        <p class="mt-4 text-secondary">Memuat data...</p>
                     </div>
                 </div>
 
@@ -163,7 +165,7 @@
 
             // Show loading state
             container.innerHTML = `
-                <div class="text-center p-6" style="grid-column: 1/-1;">
+                <div class="text-center p-6" style="grid-column: 1/-1; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 200px;">
                     <div class="spinner"></div>
                     <p class="mt-4 text-secondary">Memuat data kost...</p>
                 </div>
