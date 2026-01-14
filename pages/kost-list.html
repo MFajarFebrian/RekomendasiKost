@@ -35,32 +35,35 @@
 
                 <!-- Filters -->
                 <div class="card mb-5" style="padding: var(--space-4);">
-                    <form id="filter-form" class="flex" style="flex-wrap: wrap; gap: var(--space-4);">
-                        <div class="form-group" style="flex: 1; min-width: 200px; margin: 0;">
+                    <form id="filter-form" class="flex"
+                        style="flex-wrap: wrap; gap: var(--space-3); align-items: stretch;">
+                        <div class="form-group" style="flex: 1 1 240px; min-width: 200px; margin: 0;">
                             <input type="text" class="form-control" id="search" placeholder="🔍 Cari nama kost...">
                         </div>
-                        <div class="form-group" style="width: 180px; margin: 0;">
-                            <select class="form-control form-select" id="kampus_id" required>
+                        <div class="form-group" style="flex: 0 1 auto; min-width: 200px; margin: 0;">
+                            <select class="form-control form-select" id="kampus_id" required
+                                style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                 <option value="" disabled selected>🎓 Pilih Kampus</option>
                             </select>
                         </div>
-                        <div class="form-group" style="width: 150px; margin: 0;">
+                        <div class="form-group" style="flex: 0 1 auto; min-width: 160px; margin: 0;">
                             <select class="form-control form-select" id="max_harga">
-                                <option value="">Max Harga</option>
+                                <option value="">💰 Max Harga</option>
                                 <option value="1000000">≤ Rp 1 Juta</option>
                                 <option value="1500000">≤ Rp 1.5 Juta</option>
                                 <option value="2000000">≤ Rp 2 Juta</option>
                                 <option value="2500000">≤ Rp 2.5 Juta</option>
                             </select>
                         </div>
-                        <div class="form-group" style="width: 130px; margin: 0;">
+                        <div class="form-group" style="flex: 0 1 auto; min-width: 150px; margin: 0;">
                             <select class="form-control form-select" id="sort_by">
-                                <option value="id">Urutkan</option>
-                                <option value="harga">Harga</option>
-                                <option value="jarak_kampus">Jarak</option>
+                                <option value="id">📊 Urutkan</option>
+                                <option value="harga">Harga Terendah</option>
+                                <option value="jarak_kampus">Jarak Terdekat</option>
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-primary">Filter</button>
+                        <button type="submit" class="btn btn-primary"
+                            style="flex: 0 0 auto; padding: var(--space-3) var(--space-5);">🔍 Filter</button>
                     </form>
                 </div>
 
@@ -157,6 +160,18 @@
 
         async function loadKost() {
             const container = document.getElementById('kost-grid');
+
+            // Show loading state
+            container.innerHTML = `
+                <div class="text-center p-6" style="grid-column: 1/-1;">
+                    <div class="spinner"></div>
+                    <p class="mt-4 text-secondary">Memuat data kost...</p>
+                </div>
+            `;
+
+            // Scroll to top of grid for better UX
+            container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
             const params = {
                 page: currentPage,
                 limit: 9,
@@ -170,7 +185,7 @@
 
             try {
                 if (!params.kampus_id) {
-                    container.innerHTML = '<div class="text-center p-6 text-secondary">Silakan pilih area kampus terlebih dahulu.</div>';
+                    container.innerHTML = '<div class="text-center p-6 text-secondary" style="grid-column: 1/-1;">Silakan pilih area kampus terlebih dahulu.</div>';
                     document.getElementById('pagination').innerHTML = '';
                     return;
                 }
@@ -178,7 +193,7 @@
                 const data = await KostAPI.getAll(params);
 
                 if (data.items.length === 0) {
-                    container.innerHTML = '<div class="text-center p-6 text-secondary">Tidak ada kost ditemukan untuk kriteria ini.</div>';
+                    container.innerHTML = '<div class="text-center p-6 text-secondary" style="grid-column: 1/-1;">Tidak ada kost ditemukan untuk kriteria ini.</div>';
                     document.getElementById('pagination').innerHTML = '';
                     return;
                 }
@@ -186,7 +201,7 @@
                 container.innerHTML = data.items.map(kost => `
                     <div class="kost-card">
                         <div class="kost-card-image">
-                            <img src="${kost.foto_utama || getPlaceholderImage(kost.nama)}" alt="${escapeHtml(kost.nama)}">
+                            <img src="${kost.foto_utama || getPlaceholderImage(kost.nama)}" alt="${escapeHtml(kost.nama)}" loading="lazy">
                         </div>
                         <div class="kost-card-content">
                             <h4 class="kost-name">${escapeHtml(kost.nama)}</h4>
@@ -199,14 +214,15 @@
                                 <span class="badge">Kebersihan: ${kost.kebersihan}/5</span>
                                 <span class="badge">Keamanan: ${kost.keamanan}/5</span>
                             </div>
-                            <a href="kost-detail.html?id=${kost.id}" class="btn btn-outline" style="width: 100%;">Detail</a>
+                            <a href="kost-detail.html?id=${kost.id}" class="btn btn-outline" style="width: 100%;" aria-label="Lihat detail ${escapeHtml(kost.nama)}">Detail</a>
                         </div>
                     </div>
                 `).join('');
 
                 renderPagination(data.pagination);
             } catch (e) {
-                container.innerHTML = '<div class="text-center text-danger">Gagal memuat data.</div>';
+                container.innerHTML = '<div class="text-center text-danger" style="grid-column: 1/-1;">Gagal memuat data. Silakan coba lagi.</div>';
+                console.error('Error loading kost:', e);
             }
         }
 
@@ -215,13 +231,16 @@
             if (pagination.total_pages <= 1) { container.innerHTML = ''; return; }
 
             let html = '';
-            if (pagination.has_prev) html += `<button class="btn btn-sm btn-secondary" onclick="goToPage(${pagination.current_page - 1})">←</button>`;
-            html += `<span class="p-3">Page ${pagination.current_page} of ${pagination.total_pages}</span>`;
-            if (pagination.has_next) html += `<button class="btn btn-sm btn-secondary" onclick="goToPage(${pagination.current_page + 1})">→</button>`;
+            if (pagination.has_prev) html += `<button class="btn btn-sm btn-secondary" onclick="goToPage(${pagination.current_page - 1})" aria-label="Halaman sebelumnya">← Sebelumnya</button>`;
+            html += `<span class="p-3" style="font-weight: 500;">Halaman ${pagination.current_page} dari ${pagination.total_pages}</span>`;
+            if (pagination.has_next) html += `<button class="btn btn-sm btn-secondary" onclick="goToPage(${pagination.current_page + 1})" aria-label="Halaman berikutnya">Selanjutnya →</button>`;
             container.innerHTML = html;
         }
 
-        function goToPage(page) { currentPage = page; loadKost(); }
+        function goToPage(page) {
+            currentPage = page;
+            loadKost();
+        }
     </script>
 </body>
 
