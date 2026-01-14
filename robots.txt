@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://sikost.vercel.app/sitemap.xml

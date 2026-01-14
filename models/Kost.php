@@ -83,18 +83,24 @@ class Kost {
         
         $items = dbFetchAll($sql, $values);
         
-        // Get total count
-        $countValues = array_slice($values, 0, -2);
-        $total = dbFetch("SELECT COUNT(*) as count FROM kost k WHERE $whereClause", $countValues);
+
+        
+        // Get total count (optional)
+        $total = 0;
+        if (empty($params['skip_count'])) {
+            $countValues = array_slice($values, 0, -2);
+            $totalResult = dbFetch("SELECT COUNT(*) as count FROM kost k WHERE $whereClause", $countValues);
+            $total = $totalResult['count'];
+        }
         
         return [
             'items' => $items,
             'pagination' => [
                 'current_page' => (int)$page,
-                'total_pages' => ceil($total['count'] / $limit),
-                'total_items' => (int)$total['count'],
+                'total_pages' => $total > 0 ? ceil($total / $limit) : 0,
+                'total_items' => (int)$total,
                 'items_per_page' => (int)$limit,
-                'has_next' => $page * $limit < $total['count'],
+                'has_next' => $total > 0 && $page * $limit < $total,
                 'has_prev' => $page > 1
             ]
         ];

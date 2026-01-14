@@ -14,6 +14,8 @@ class KostController {
      */
     public static function index($params = []) {
         try {
+            // Optimization for homepage or when total count is not needed
+            // Frontend can pass skip_count=1 to avoid counting all records
             $result = Kost::getAll($params);
             Response::success($result);
         } catch (Exception $e) {

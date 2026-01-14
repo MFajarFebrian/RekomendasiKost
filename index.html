@@ -15,6 +15,11 @@
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="stylesheet" href="assets/css/components.css">
     <link rel="stylesheet" href="assets/css/responsive.css">
+
+    <!-- Defer blocking scripts -->
+    <script src="assets/js/api.js" defer></script>
+    <script src="assets/js/utils.js" defer></script>
+    <script src="assets/js/app.js" defer></script>
 </head>
 
 <body>
@@ -163,10 +168,6 @@
             </div>
         </div>
     </footer>
-
-    <script src="assets/js/api.js"></script>
-    <script src="assets/js/utils.js"></script>
-    <script src="assets/js/app.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             await loadFeaturedKost();
@@ -175,7 +176,7 @@
         async function loadFeaturedKost() {
             const container = document.getElementById('featured-kost');
             try {
-                const data = await KostAPI.getAll({ limit: 6 });
+                const data = await KostAPI.getAll({ limit: 6, skip_count: 1 });
 
                 if (data.items.length === 0) {
                     container.innerHTML = '<p class="text-center text-secondary">Belum ada data kost.</p>';
