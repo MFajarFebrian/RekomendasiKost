@@ -14,7 +14,7 @@
 
   /* Secondary Colors */
   --secondary-light: #F8F9FA;
-  --secondary-gray: #6C757D;
+  --secondary-gray: #495057; /* Improved contrast ratio for WCAG AA */
   --secondary-dark: #343A40;
 
   /* Accent Colors */

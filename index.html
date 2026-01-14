@@ -9,12 +9,21 @@
     <title>SiKost - Sistem Rekomendasi Kost</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Critical CSS inline or first -->
+    <link rel="stylesheet" href="assets/css/main.css">
+    <!-- Non-critical CSS deferred -->
+    <link rel="stylesheet" href="assets/css/components.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="assets/css/responsive.css" media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="assets/css/components.css">
+        <link rel="stylesheet" href="assets/css/responsive.css">
+    </noscript>
+    <!-- Fonts deferred -->
+    <link rel="preload" as="style"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&display=swap">
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/main.css">
-    <link rel="stylesheet" href="assets/css/components.css">
-    <link rel="stylesheet" href="assets/css/responsive.css">
+        rel="stylesheet" media="print" onload="this.media='all'">
 
     <!-- Defer blocking scripts -->
     <script src="assets/js/api.js" defer></script>
@@ -62,39 +71,39 @@
         <section class="section bg-light">
             <div class="container">
                 <h2 class="text-center mb-6">Kriteria Penilaian</h2>
-                <p class="text-center text-secondary mb-6"
-                    style="max-width: 600px; margin-left: auto; margin-right: auto;">
+                <p class="text-center mb-6"
+                    style="max-width: 600px; margin-left: auto; margin-right: auto; color: #495057;">
                     Sistem kami menggunakan 6 kriteria untuk menilai dan merangking kost berdasarkan metode AHP-TOPSIS
                 </p>
                 <div class="services-grid">
                     <div class="service-card">
                         <div class="service-icon">📍</div>
-                        <h4 class="service-title">Jarak Kampus</h4>
+                        <h3 class="service-title">Jarak Kampus</h3>
                         <p class="service-description">Semakin dekat lokasi kost ke kampus, semakin tinggi nilainya</p>
                     </div>
                     <div class="service-card">
                         <div class="service-icon">🛒</div>
-                        <h4 class="service-title">Jarak Market</h4>
+                        <h3 class="service-title">Jarak Market</h3>
                         <p class="service-description">Akses mudah ke minimarket dan pusat perbelanjaan</p>
                     </div>
                     <div class="service-card">
                         <div class="service-icon">💰</div>
-                        <h4 class="service-title">Harga</h4>
+                        <h3 class="service-title">Harga</h3>
                         <p class="service-description">Harga sewa per bulan yang sesuai dengan budget</p>
                     </div>
                     <div class="service-card">
                         <div class="service-icon">🧹</div>
-                        <h4 class="service-title">Kebersihan</h4>
+                        <h3 class="service-title">Kebersihan</h3>
                         <p class="service-description">Tingkat kebersihan kamar dan area umum</p>
                     </div>
                     <div class="service-card">
                         <div class="service-icon">🔒</div>
-                        <h4 class="service-title">Keamanan</h4>
+                        <h3 class="service-title">Keamanan</h3>
                         <p class="service-description">Sistem keamanan seperti CCTV dan jam malam</p>
                     </div>
                     <div class="service-card">
                         <div class="service-icon">🏠</div>
-                        <h4 class="service-title">Fasilitas</h4>
+                        <h3 class="service-title">Fasilitas</h3>
                         <p class="service-description">WiFi, AC, kamar mandi dalam, dan lainnya</p>
                     </div>
                 </div>
@@ -112,7 +121,8 @@
                     </div>
                 </div>
                 <div class="text-center mt-6">
-                    <a href="pages/kost-list.html" class="btn btn-outline">Lihat Semua Kost →</a>
+                    <a href="pages/kost-list.html" class="btn btn-outline"
+                        style="border-color: #5549E8; color: #5549E8;">Lihat Semua Kost →</a>
                 </div>
             </div>
         </section>
@@ -125,7 +135,7 @@
                     Gunakan
                     sistem rekomendasi kami untuk mendapatkan hasil yang optimal berdasarkan preferensimu.</p>
                 <a href="pages/recommendations.html" class="btn"
-                    style="background: white; color: var(--primary-purple);">Mulai Sekarang</a>
+                    style="background: white; color: #4a3f9f; font-weight: 600;">Mulai Sekarang</a>
             </div>
         </section>
 
@@ -140,7 +150,7 @@
                         objektif dan terukur.</p>
                 </div>
                 <div>
-                    <h5 class="footer-title">Menu</h5>
+                    <h4 class="footer-title">Menu</h4>
                     <div class="footer-links">
                         <a href="index.html">Home</a>
                         <a href="pages/kost-list.html">Daftar Kost</a>
@@ -148,7 +158,7 @@
                     </div>
                 </div>
                 <div>
-                    <h5 class="footer-title">Fitur</h5>
+                    <h4 class="footer-title">Fitur</h4>
                     <div class="footer-links">
                         <a href="#">Pencarian</a>
                         <a href="#">Filter</a>
@@ -156,7 +166,7 @@
                     </div>
                 </div>
                 <div>
-                    <h5 class="footer-title">Kontak</h5>
+                    <h4 class="footer-title">Kontak</h4>
                     <div class="footer-links">
                         <a href="#">Email: info@sikost.com</a>
                         <a href="#">Telp: (021) 123-4567</a>
@@ -189,13 +199,13 @@
                             <img src="${kost.foto_utama || getPlaceholderImage(kost.nama)}" alt="${escapeHtml(kost.nama)}">
                         </div>
                         <div class="kost-card-content">
-                            <h4 class="kost-name">${escapeHtml(kost.nama)}</h4>
+                            <h3 class="kost-name">${escapeHtml(kost.nama)}</h3>
                             <p class="kost-price">${formatCurrency(kost.harga)} <span>/bulan</span></p>
                             <div class="kost-meta">
                                 <span>📍 ${formatDistance(kost.jarak_kampus)} dari kampus</span>
                                 <span>⭐ ${((kost.kebersihan + kost.keamanan + kost.fasilitas) / 3).toFixed(1)}</span>
                             </div>
-                            <a href="pages/kost-detail.html?id=${kost.id}" class="btn btn-outline" style="width: 100%;">Lihat Detail</a>
+                            <a href="pages/kost-detail.html?id=${kost.id}" class="btn btn-outline" style="width: 100%; border-color: #5549E8; color: #5549E8;">Lihat Detail</a>
                         </div>
                     </div>
                 `).join('');
