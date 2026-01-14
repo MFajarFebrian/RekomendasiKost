@@ -791,11 +791,13 @@ textarea.form-control {
     margin-bottom: var(--space-8);
 }
 
-.footer-brand {
+.footer-brand,
+h3.footer-brand {
     font-family: var(--font-heading);
     font-size: var(--fs-2xl);
     font-weight: var(--fw-bold);
     margin-bottom: var(--space-4);
+    margin-top: 0;
     background: var(--primary-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;

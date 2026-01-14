@@ -218,7 +218,7 @@
         <div class="container">
             <div class="footer-grid">
                 <div>
-                    <div class="footer-brand">SiKost</div>
+                    <h3 class="footer-brand">SiKost</h3>
                     <p class="footer-description">Sistem Rekomendasi Kost dengan metode AHP-TOPSIS untuk hasil yang
                         objektif dan terukur.</p>
                 </div>
@@ -278,7 +278,7 @@
                                 <span>📍 ${formatDistance(kost.jarak_kampus)} dari kampus</span>
                                 <span>⭐ ${((kost.kebersihan + kost.keamanan + kost.fasilitas) / 3).toFixed(1)}</span>
                             </div>
-                            <a href="pages/kost-detail.html?id=${kost.id}" class="btn btn-outline" style="width: 100%; border-color: #5549E8; color: #5549E8;">Lihat Detail</a>
+                            <a href="pages/kost-detail.html?id=${kost.id}" class="btn btn-outline" style="width: 100%; border-color: #5549E8; color: #5549E8;" aria-label="Lihat detail ${escapeHtml(kost.nama)}">Lihat Detail</a>
                         </div>
                     </div>
                 `).join('');
