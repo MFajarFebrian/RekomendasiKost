@@ -129,20 +129,8 @@
                             <a href="recommendations.html" class="btn btn-primary">Lihat Rekomendasi</a>
                             <a href="kost-list.html" class="btn btn-outline">Kost Lainnya</a>
                         </div>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="card mt-6" style="padding: var(--space-5);">
-                    <h4 class="mb-4">Detail Data Kriteria</h4>
-                    <table class="table">
-                        <tr><th>Kriteria</th><th>Nilai</th><th>Tipe</th></tr>
-                        <tr><td>Jarak Kampus</td><td>${kost.jarak_kampus} km</td><td><span class="badge badge-warning">Cost</span></td></tr>
-                        <tr><td>Jarak Market</td><td>${kost.jarak_market} km</td><td><span class="badge badge-warning">Cost</span></td></tr>
-                        <tr><td>Harga</td><td>${formatCurrency(kost.harga)}</td><td><span class="badge badge-warning">Cost</span></td></tr>
-                        <tr><td>Kebersihan</td><td>${kost.kebersihan}/5</td><td><span class="badge badge-success">Benefit</span></td></tr>
-                        <tr><td>Keamanan</td><td>${kost.keamanan}/5</td><td><span class="badge badge-success">Benefit</span></td></tr>
-                        <tr><td>Fasilitas</td><td>${kost.fasilitas}/5</td><td><span class="badge badge-success">Benefit</span></td></tr>
-                    </table>
                 </div>`;
             } catch (e) {
                 container.innerHTML = `<p class="text-danger">Gagal memuat data: ${e.message}</p>`;
