@@ -14,7 +14,8 @@
 
   /* Secondary Colors */
   --secondary-light: #F8F9FA;
-  --secondary-gray: #495057; /* Improved contrast ratio for WCAG AA */
+  --secondary-gray: #495057;
+  /* Improved contrast ratio for WCAG AA */
   --secondary-dark: #343A40;
 
   /* Accent Colors */
@@ -36,9 +37,9 @@
   --glass-border: rgba(255, 255, 255, 0.2);
   --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
 
-  /* Typography */
-  --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-heading: 'Outfit', 'Inter', sans-serif;
+  /* Typography - Include fallbacks with matching metrics */
+  --font-primary: 'Inter', 'Inter Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-heading: 'Outfit', 'Outfit Fallback', 'Inter', sans-serif;
   --font-mono: 'Fira Code', 'Consolas', monospace;
 
   /* Font Sizes */
